@@ -44,6 +44,7 @@ var App = observer(React.createClass({
 
     return (
       <div style={style.root}>
+        <div style={style.header}></div>
         <PanelGroup direction="row" onResize={this.handleResize} minSize={State.getPanelGroupMinWidth(1)}>
           {
             State.panels.map(function(panel, i, arr) {
