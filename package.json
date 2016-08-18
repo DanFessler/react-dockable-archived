@@ -4,6 +4,7 @@
   "private": true,
   "devDependencies": {
     "coffee-script": "^1.10.0",
+    "jquery": "^3.1.0",
     "react-scripts": "0.2.1",
     "require-dir": "^0.3.0",
     "webpack-requiredir": "^0.2.1"
