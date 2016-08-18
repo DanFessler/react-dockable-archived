@@ -45,11 +45,7 @@ var Panel = observer(React.createClass({
         this.props.index,
         rect.width,
         // recalcalculate again if the width is below minimum
-        function() {
-          this.onNextFrame(function() {
-            this.calculateStretchWidth()
-          }.bind(this))
-        }.bind(this)
+        function() {this.onNextFrame(this.calculateStretchWidth)}.bind(this)
       );
     }
   },

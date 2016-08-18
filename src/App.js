@@ -44,21 +44,6 @@ var App = observer(React.createClass({
 
     return (
       <div style={style.root}>
-        <div style={style.header} />
-        {/* <div style={style.container}>
-
-          {
-          State.panels.map(function(panel, i, arr) {
-          var metadata = {
-          isFirst: (i === 0 ? true : false),
-          isLast: (i === arr.length-1 ? true : false),
-          }
-          return (
-          <Panel handleEdgeClick={this.handleEdgeClick} key={panel.key? panel.key : i} index={i} data={panel} {...metadata}/>
-          );
-          }, this)
-          }
-        </div> */}
         <PanelGroup direction="row" onResize={this.handleResize} minSize={State.getPanelGroupMinWidth(1)}>
           {
             State.panels.map(function(panel, i, arr) {
