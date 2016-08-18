@@ -164,7 +164,6 @@ var State = observable({
     // if we made this panel too small
     if (this.panels[panelIndex].width < minsize) {
       delta = minsize - this.panels[panelIndex].width;
-      console.log("poop1");
 
       if (panelIndex === 0)
         this.resizePanel(panelIndex, delta, initialIndex, recurseMode);
@@ -175,7 +174,6 @@ var State = observable({
     // if we made this panel too big
     if (maxsize !== 0 && this.panels[panelIndex].width > maxsize) {
       delta = this.panels[panelIndex].width - maxsize;
-      console.log("poop2");
 
       if (panelIndex === 0)
         this.resizePanel(panelIndex, -delta, initialIndex, recurseMode);
@@ -191,7 +189,6 @@ var State = observable({
     // if we made the next panel too small
     if (this.panels[panelIndex+1].width < minsize) {
       delta = minsize - this.panels[panelIndex+1].width;
-      console.log("poop3");
 
       if (panelIndex+1 === this.panels.length-1)
         this.resizePanel(panelIndex, -delta, initialIndex, recurseMode);
@@ -202,7 +199,6 @@ var State = observable({
     // if we made the next panel too big
     if (maxsize !== 0 && this.panels[panelIndex+1].width > maxsize) {
       delta = this.panels[panelIndex+1].width - maxsize;
-      console.log("poop4");
 
       if (panelIndex+1 === this.panels.length-1)
         this.resizePanel(panelIndex, delta, initialIndex, recurseMode);
@@ -238,7 +234,9 @@ var State = observable({
     this.panels[panelIndex].width = width;
     this.resizePanel(panelIndex-1, 0, undefined, true);
 
-    if (callback) callback();
+    if (callback && width < this.getPanelMinWidth(panelIndex)) {
+      callback();
+    }
   },
 
   resizeWindow: function(panelIndex, windowIndex, delta) {

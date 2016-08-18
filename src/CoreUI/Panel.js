@@ -39,24 +39,18 @@ var Panel = observer(React.createClass({
   calculateStretchWidth: function() {
     if (this.props.data.size === "stretch") {
 
-      console.log("POOP");
-
       var rect = ReactDOM.findDOMNode(this).getBoundingClientRect();
 
-      // if (rect.width < 150) {
-        State.setPanelSize(
-          this.props.index,
-          rect.width,
-          // recalcalculate again if the width is below minimum
-          function() {
-            if (rect.width < 150) {
-              this.onNextFrame(function() {
-                this.calculateStretchWidth()
-              }.bind(this))
-            }
-          }.bind(this)
-        );
-      // }
+      State.setPanelSize(
+        this.props.index,
+        rect.width,
+        // recalcalculate again if the width is below minimum
+        function() {
+          this.onNextFrame(function() {
+            this.calculateStretchWidth()
+          }.bind(this))
+        }.bind(this)
+      );
     }
   },
 
@@ -70,7 +64,7 @@ var Panel = observer(React.createClass({
         width: this.props.data.width,
         minWidth: !this.props.data.size === "stretch"? this.props.data.width : 0,
         flexGrow: this.props.data.size === "stretch"? 1 : 0,
-        // flexShrink: this.props.data.stretch? 1 : 0,
+        flexShrink: this.props.data.size === "stretch"? 1 : 0,
       },
       titlebar: {
         height: 12,
