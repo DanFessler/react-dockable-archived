@@ -31,6 +31,7 @@ var PanelGroup = React.createClass({
 
     // lets build up a new children array with added resize borders
     var children = [];
+    var stretchIncluded = false;
     for (var i=0; i < this.props.children.length; i++) {
 
       // give position info to children
@@ -39,12 +40,19 @@ var PanelGroup = React.createClass({
         isLast: (i === this.props.children.length-1 ? true : false),
       }
 
+      // if none of the panels included was stretchy, make the last one stretchy
+      if (this.props.children[i].props.resize === "stretch") stretchIncluded = true;
+      if (!stretchIncluded && metadata.isLast) metadata.resize = "stretch";
+
       // push children with added metadata
       children.push(React.cloneElement(
           this.props.children[i],
           {...metadata}
         )
       );
+
+      // okay I do have access to a child's props.. that's cool
+      // console.log(this.props.children[i].props.data);
 
       // add a handle between panels
       if (i < this.props.children.length-1) {
