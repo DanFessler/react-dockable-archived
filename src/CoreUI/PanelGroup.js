@@ -7,8 +7,9 @@ var PanelGroup = React.createClass({
     };
   },
   handleResize: function(i, delta) {
-    if (this.props.onResize)
-      this.props.onResize(i, delta);
+    if (this.props.onResize){
+      return this.props.onResize(i, delta);
+    }
   },
   render: function() {
     var style = {
@@ -101,24 +102,27 @@ var Divider = React.createClass({
   onMouseMove: function (e) {
     if (!this.state.dragging) return
 
-    this.handleResize(
+    var resultDelta = this.handleResize(
       this.props.panelID,
       {x: e.pageX - this.state.initPos.x, y: e.pageY - this.state.initPos.y}
     );
 
-    this.setState({
-      initPos: {
-        x: e.pageX,
-        y: e.pageY
-      },
-    })
+    // if we've resized the panel like intended, reset the initPos
+    if (resultDelta !== 0) {
+      this.setState({
+        initPos: {
+          x: e.pageX,
+          y: e.pageY
+        },
+      })
+    }
 
     e.stopPropagation()
     e.preventDefault()
   },
 
   handleResize(i, delta) {
-    this.props.handleResize(i, delta);
+    return this.props.handleResize(i, delta);
   },
 
   getHandleWidth: function() {

@@ -11,7 +11,7 @@ var App = observer(React.createClass({
   },
 
   handleResize: function(i, delta) {
-    State.resizePanel(i, delta.x);
+    return State.resizePanel(i, delta.x);
   },
 
   render: function() {

@@ -31,8 +31,6 @@ var State = observable({
     {
       key: 5,
       width: 150,
-      minWidth: 150,
-      maxWidth: 150,
       size: "fixed",
       windows: [
         {
@@ -147,10 +145,14 @@ var State = observable({
     }
   },
 
-  resizePanel: function(panelIndex, delta, initialIndex, recurseMode) {
+  resizePanel: function(panelIndex, delta) {
 
     // Default minimum size of panel
     var minsize = 128; var maxsize = 256;
+
+    // save old width so re can report back how much this panel actually moved
+    // after all the adjustments have been made
+    var resultDelta = delta;
 
     // make the changes and deal with the consequences later
     this.panels[panelIndex].width += delta;
@@ -166,9 +168,9 @@ var State = observable({
       delta = minsize - this.panels[panelIndex].width;
 
       if (panelIndex === 0)
-        this.resizePanel(panelIndex, delta, initialIndex, recurseMode);
+        resultDelta += this.resizePanel(panelIndex, delta);
       else
-        this.resizePanel(panelIndex-1, -delta, initialIndex, recurseMode);
+        resultDelta += this.resizePanel(panelIndex-1, -delta);
     };
 
     // if we made this panel too big
@@ -176,9 +178,9 @@ var State = observable({
       delta = this.panels[panelIndex].width - maxsize;
 
       if (panelIndex === 0)
-        this.resizePanel(panelIndex, -delta, initialIndex, recurseMode);
+        resultDelta += this.resizePanel(panelIndex, -delta);
       else
-        this.resizePanel(panelIndex-1, delta, initialIndex, recurseMode);
+        resultDelta += this.resizePanel(panelIndex-1, delta);
     };
 
 
@@ -191,9 +193,9 @@ var State = observable({
       delta = minsize - this.panels[panelIndex+1].width;
 
       if (panelIndex+1 === this.panels.length-1)
-        this.resizePanel(panelIndex, -delta, initialIndex, recurseMode);
+        resultDelta += this.resizePanel(panelIndex, -delta);
       else
-        this.resizePanel(panelIndex+1, delta, initialIndex, recurseMode);
+        resultDelta += this.resizePanel(panelIndex+1, delta);
     };
 
     // if we made the next panel too big
@@ -201,25 +203,32 @@ var State = observable({
       delta = this.panels[panelIndex+1].width - maxsize;
 
       if (panelIndex+1 === this.panels.length-1)
-        this.resizePanel(panelIndex, delta, initialIndex, recurseMode);
+        resultDelta += this.resizePanel(panelIndex, delta);
       else
-        this.resizePanel(panelIndex+1, -delta, initialIndex, recurseMode);
+        resultDelta += this.resizePanel(panelIndex+1, -delta);
     };
 
-
-    // if we've recursed our way back to where we started, exit
-    if (initialIndex !== undefined) {
-      if (!recurseMode && panelIndex === (recurseMode? 0 : initialIndex)) return
-    }
-    else { initialIndex = panelIndex; }
+    return resultDelta;
   },
 
   getPanelMinWidth(panelIndex) {
-    return this.panels[panelIndex].minWidth? this.panels[panelIndex].minWidth : 150;
+    if (this.panels[panelIndex].size === "fixed") {
+      if (!this.panels[panelIndex].fixedWidth) {
+        this.panels[panelIndex].fixedWidth = this.panels[panelIndex].width;
+      }
+      return this.panels[panelIndex].fixedWidth;
+    }
+    return 150;
   },
 
   getPanelMaxWidth(panelIndex) {
-    return this.panels[panelIndex].maxWidth? this.panels[panelIndex].maxWidth : 0;
+    if (this.panels[panelIndex].size === "fixed") {
+      if (!this.panels[panelIndex].fixedWidth) {
+        this.panels[panelIndex].fixedWidth = this.panels[panelIndex].width;
+      }
+      return this.panels[panelIndex].fixedWidth;
+    }
+    return 0;
   },
 
   getPanelGroupMinWidth(spacing) {
