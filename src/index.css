@@ -1,0 +1,23 @@
+html {
+  height: 100%;
+  user-select: none;
+}
+
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  background-color: rgb(66,66,66);
+  overflow: hidden;
+  cursor: default;
+}
+
+#root {
+  height: 100%;
+}
+
+.marchingAnts {
+  border-width: 0.5px;
+  border-image: url('./ants2.gif') 1 repeat repeat;
+}
