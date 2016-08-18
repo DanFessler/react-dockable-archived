@@ -45,10 +45,16 @@ var App = observer(React.createClass({
     return (
       <div style={style.root}>
         <div style={style.header}></div>
-        <PanelGroup direction="row" onResize={this.handleResize} minSize={State.getPanelGroupMinWidth(1)}>
+        <PanelGroup direction="row" onResize={this.handleResize} minSize={State.getPanelGroupMinSize(1)}>
           {
             State.panels.map(function(panel, i, arr) {
-              return <Panel handleEdgeClick={this.handleEdgeClick} key={panel.key? panel.key : i} index={i} data={panel}/>;
+              return <Panel
+                index={i}
+                key={panel.key? panel.key : i}
+                handleEdgeClick={this.handleEdgeClick}
+                resize={panel.resize}
+                width={panel.size}
+                windows={panel.windows}/>;
             }, this)
           }
         </PanelGroup>

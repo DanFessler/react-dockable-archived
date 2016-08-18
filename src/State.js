@@ -8,9 +8,8 @@ const widgets = {
 var State = observable({
   panels: [
     {
-      key: 0,
-      width: 256,
-      size: "dynamic",
+      size: 256,
+      resize: "dynamic",
       windows: [
         {
           height: 228,
@@ -29,9 +28,8 @@ var State = observable({
       ]
     },
     {
-      key: 5,
-      width: 150,
-      size: "fixed",
+      size: 150,
+      resize: "fixed",
       windows: [
         {
           height: 128,
@@ -50,9 +48,8 @@ var State = observable({
       ]
     },
     {
-      key: 2,
-      width: 256,
-      size: "stretch",
+      size: 256,
+      resize: "stretch",
       windows: [
         {
           height: 128,
@@ -64,9 +61,8 @@ var State = observable({
       ]
     },
     {
-      key: 3,
-      width: 256,
-      size: "dynamic",
+      size: 256,
+      resize: "dynamic",
       windows: [
         {
           height: 128,
@@ -92,9 +88,8 @@ var State = observable({
       ]
     },
     {
-      key: 4,
-      width: 256,
-      size: "dynamic",
+      size: 256,
+      resize: "dynamic",
       windows: [
         {
           height: 128,
@@ -150,22 +145,22 @@ var State = observable({
     // Default minimum size of panel
     var minsize = 128; var maxsize = 256;
 
-    // save old width so re can report back how much this panel actually moved
-    // after all the adjustments have been made
+    // track the progressive delta so we can report back how much this panel
+    // actually moved after all the adjustments have been made
     var resultDelta = delta;
 
     // make the changes and deal with the consequences later
-    this.panels[panelIndex].width += delta;
-    this.panels[panelIndex+1].width -= delta;
+    this.panels[panelIndex].size += delta;
+    this.panels[panelIndex+1].size -= delta;
 
 
     // Min and max for THIS panel
-    minsize = this.getPanelMinWidth(panelIndex);
-    maxsize = this.getPanelMaxWidth(panelIndex);
+    minsize = this.getPanelMinSize(panelIndex);
+    maxsize = this.getPanelMaxSize(panelIndex);
 
     // if we made this panel too small
-    if (this.panels[panelIndex].width < minsize) {
-      delta = minsize - this.panels[panelIndex].width;
+    if (this.panels[panelIndex].size < minsize) {
+      delta = minsize - this.panels[panelIndex].size;
 
       if (panelIndex === 0)
         resultDelta += this.resizePanel(panelIndex, delta);
@@ -174,8 +169,8 @@ var State = observable({
     };
 
     // if we made this panel too big
-    if (maxsize !== 0 && this.panels[panelIndex].width > maxsize) {
-      delta = this.panels[panelIndex].width - maxsize;
+    if (maxsize !== 0 && this.panels[panelIndex].size > maxsize) {
+      delta = this.panels[panelIndex].size - maxsize;
 
       if (panelIndex === 0)
         resultDelta += this.resizePanel(panelIndex, -delta);
@@ -185,12 +180,12 @@ var State = observable({
 
 
     // Min and max for NEXT panel
-    minsize = this.getPanelMinWidth(panelIndex+1);
-    maxsize = this.getPanelMaxWidth(panelIndex+1);
+    minsize = this.getPanelMinSize(panelIndex+1);
+    maxsize = this.getPanelMaxSize(panelIndex+1);
 
     // if we made the next panel too small
-    if (this.panels[panelIndex+1].width < minsize) {
-      delta = minsize - this.panels[panelIndex+1].width;
+    if (this.panels[panelIndex+1].size < minsize) {
+      delta = minsize - this.panels[panelIndex+1].size;
 
       if (panelIndex+1 === this.panels.length-1)
         resultDelta += this.resizePanel(panelIndex, -delta);
@@ -199,8 +194,8 @@ var State = observable({
     };
 
     // if we made the next panel too big
-    if (maxsize !== 0 && this.panels[panelIndex+1].width > maxsize) {
-      delta = this.panels[panelIndex+1].width - maxsize;
+    if (maxsize !== 0 && this.panels[panelIndex+1].size > maxsize) {
+      delta = this.panels[panelIndex+1].size - maxsize;
 
       if (panelIndex+1 === this.panels.length-1)
         resultDelta += this.resizePanel(panelIndex, delta);
@@ -211,39 +206,39 @@ var State = observable({
     return resultDelta;
   },
 
-  getPanelMinWidth(panelIndex) {
-    if (this.panels[panelIndex].size === "fixed") {
-      if (!this.panels[panelIndex].fixedWidth) {
-        this.panels[panelIndex].fixedWidth = this.panels[panelIndex].width;
+  getPanelMinSize(panelIndex) {
+    if (this.panels[panelIndex].resize === "fixed") {
+      if (!this.panels[panelIndex].fixedSize) {
+        this.panels[panelIndex].fixedSize = this.panels[panelIndex].size;
       }
-      return this.panels[panelIndex].fixedWidth;
+      return this.panels[panelIndex].fixedSize;
     }
     return 150;
   },
 
-  getPanelMaxWidth(panelIndex) {
-    if (this.panels[panelIndex].size === "fixed") {
-      if (!this.panels[panelIndex].fixedWidth) {
-        this.panels[panelIndex].fixedWidth = this.panels[panelIndex].width;
+  getPanelMaxSize(panelIndex) {
+    if (this.panels[panelIndex].resize === "fixed") {
+      if (!this.panels[panelIndex].fixedSize) {
+        this.panels[panelIndex].fixedSize = this.panels[panelIndex].size;
       }
-      return this.panels[panelIndex].fixedWidth;
+      return this.panels[panelIndex].fixedSize;
     }
     return 0;
   },
 
-  getPanelGroupMinWidth(spacing) {
-    var width = 0;
+  getPanelGroupMinSize(spacing) {
+    var size = 0;
     for (var i = 0; i < this.panels.length; i++) {
-      width += this.getPanelMinWidth(i);
+      size += this.getPanelMinSize(i);
     }
-    return width + ((this.panels.length-1) * spacing)
+    return size + ((this.panels.length-1) * spacing)
   },
 
-  setPanelSize(panelIndex, width, callback) {
-    this.panels[panelIndex].width = width;
+  setPanelSize(panelIndex, size, callback) {
+    this.panels[panelIndex].size = size;
     this.resizePanel(panelIndex-1, 0, undefined, true);
 
-    if (callback && width < this.getPanelMinWidth(panelIndex)) {
+    if (callback && size < this.getPanelMinSize(panelIndex)) {
       callback();
     }
   },

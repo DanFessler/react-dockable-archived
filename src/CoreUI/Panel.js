@@ -37,7 +37,7 @@ var Panel = observer(React.createClass({
   },
 
   calculateStretchWidth: function() {
-    if (this.props.data.size === "stretch") {
+    if (this.props.resize === "stretch") {
 
       var rect = ReactDOM.findDOMNode(this).getBoundingClientRect();
 
@@ -57,10 +57,10 @@ var Panel = observer(React.createClass({
         display: "flex",
         position: "relative",
         flexDirection: "column",
-        width: this.props.data.width,
-        minWidth: !this.props.data.size === "stretch"? this.props.data.width : 0,
-        flexGrow: this.props.data.size === "stretch"? 1 : 0,
-        flexShrink: this.props.data.size === "stretch"? 1 : 0,
+        width: this.props.width,
+        minWidth: !this.props.resize === "stretch"? this.props.width : 0,
+        flexGrow: this.props.resize === "stretch"? 1 : 0,
+        flexShrink: this.props.resize === "stretch"? 1 : 0,
       },
       titlebar: {
         height: 12,
@@ -85,7 +85,7 @@ var Panel = observer(React.createClass({
 
         <PanelGroup direction="column" onResize={this.handleResize}>
           {
-            this.props.data.windows.map(function(window, i) {
+            this.props.windows.map(function(window, i) {
               return (
                 <Window key={i} window={window}/>
               );
