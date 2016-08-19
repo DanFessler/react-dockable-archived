@@ -1,24 +1,34 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {observable} from "mobx";
+import {observable, extendObservable} from "mobx";
 import {observer} from "mobx-react";
 // import State from "../State.js";
 import $ from "jquery";
 
 var State = observable({
   sliderval: 50,
-
-  testDragPos: {
-    x: 10,
-    y: 10,
-  },
 })
 
 export default {
   title: "Poop2",
   Widget: observer(React.createClass({
+    componentWillMount() {
+      extendObservable(this, {
+        testDragPos: {
+          x: 10,
+          y: 10,
+        },
+        sliderval: 50,
+      })
+    },
     handleSliderChange: function(e) {
       State.sliderval = e.currentTarget.valueAsNumber;
+    },
+    updatePos: function(x,y) {
+      this.testDragPos = {
+        x: x,
+        y: y
+      };
     },
     render: function() {
       var style = {
@@ -48,7 +58,7 @@ export default {
           <br/>
           <input style={style.slider} onChange={this.handleSliderChange} type="range" value={State.sliderval}/>
           <div style={style.dragContainer}>
-            <Draggable initialPos={State.testDragPos}><div>this is a test div</div></Draggable>
+            <Draggable updatePos={this.updatePos} initialPos={this.testDragPos}><div>this is a test div</div></Draggable>
           </div>
         </div>
       )
@@ -111,10 +121,7 @@ var Draggable = React.createClass({
   onMouseMove: function (e) {
     if (!this.state.dragging) return
 
-    State.testDragPos = {
-      x: e.pageX - this.state.rel.x,
-      y: e.pageY - this.state.rel.y
-    };
+    this.props.updatePos(e.pageX - this.state.rel.x, e.pageY - this.state.rel.y)
 
     e.stopPropagation()
     e.preventDefault()
