@@ -28,6 +28,7 @@ var Window = observer(React.createClass({
         color: "rgb(180,180,180)",
         fontSize: "8pt",
         flexGrow: 1,
+        display: "flex"
       },
       titlebar: {
         position: "relative",
