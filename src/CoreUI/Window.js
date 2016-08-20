@@ -15,13 +15,6 @@ var Window = observer(React.createClass({
   },
   render: function() {
     var style = {
-      container: {
-        backgroundColor: "rgb(83,83,83)",
-        position: "relative",
-        display: "flex",
-        overflow: "hidden",
-        flexGrow: 1,
-      },
       window: {
         position: "relative",
         overflow: "hidden",
@@ -35,9 +28,6 @@ var Window = observer(React.createClass({
         color: "rgb(180,180,180)",
         fontSize: "8pt",
         flexGrow: 1,
-        flexShrink: 1,
-        display: "flex",
-        overflow:"hidden",
       },
       titlebar: {
         position: "relative",
@@ -47,7 +37,6 @@ var Window = observer(React.createClass({
         boxSizing: "border-box",
         display: "flex",
         backgroundColor: "rgb(66,66,66)",
-        flexGrow: 0,
       },
       closebox: {
         position: "absolute",
@@ -66,26 +55,24 @@ var Window = observer(React.createClass({
     var WidgetUI = widgets[this.props.window.widgets[this.state.selected]].Widget;
 
     return (
-      <div style={style.container}>
-        <div className="window" style={style.window}>
+      <div className="window" style={style.window}>
 
-          <div className="titlebar" style={style.titlebar}>
-            {
-              this.props.window.widgets.map(function(widget, i) {
-                var thiswidget = widgets[widget]
-                return (
-                  <WindowTab onClick={this.handleTabSelect} key={i} index={i} selected={i === this.state.selected ? true : false} title={ thiswidget.title } />
-                );
-              }, this)
-            }
-            <div style={style.closebox}>☰</div>
-          </div>
-
-          <div className="content" style={style.content}>
-            <WidgetUI />
-          </div>
-
+        <div className="titlebar" style={style.titlebar}>
+          {
+            this.props.window.widgets.map(function(widget, i) {
+              var thiswidget = widgets[widget]
+              return (
+                <WindowTab onClick={this.handleTabSelect} key={i} index={i} selected={i === this.state.selected ? true : false} title={ thiswidget.title } />
+              );
+            }, this)
+          }
+          <div style={style.closebox}>☰</div>
         </div>
+
+        <div className="content" style={style.content}>
+          <WidgetUI />
+        </div>
+
       </div>
     );
   }

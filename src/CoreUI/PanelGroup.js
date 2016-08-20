@@ -196,7 +196,7 @@ var PanelGroup = observer(React.createClass({
 
       // push children with added metadata
       newChildren.push(
-        <Panel style={panelStyle} key={"panel"+i} panelID={i} resize={this.panels[i].resize} className="panelWrapper" {...metadata}>{initialChildren[i]}</Panel>
+        <Panel style={panelStyle} key={"panel"+i} panelID={i} resize={this.panels[i].resize} {...metadata}>{initialChildren[i]}</Panel>
       );
 
       // add a handle between panels
@@ -205,7 +205,7 @@ var PanelGroup = observer(React.createClass({
       }
     }
 
-    return <div style={style.container}>{newChildren}</div>
+    return <div className="panelGroup" style={style.container}>{newChildren}</div>
   },
 }))
 
@@ -239,7 +239,7 @@ var Panel = React.createClass({
 
   render: function() {
     return (
-      <div style={this.props.style}>{this.props.children}</div>
+      <div className="panelWrapper" style={this.props.style}>{this.props.children}</div>
     )
   }
 })
@@ -344,7 +344,7 @@ var Divider = React.createClass({
       }
     }
     return (
-      <div style={style.divider} onMouseDown={this.onMouseDown}>
+      <div className="divider" style={style.divider} onMouseDown={this.onMouseDown}>
         <div style={style.handle}></div>
       </div>
     );
