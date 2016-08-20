@@ -1,5 +1,5 @@
 import React from 'react';
-import {observable, computed, extendObservable} from "mobx";
+import {extendObservable} from "mobx";
 import {observer} from "mobx-react";
 
 export default {

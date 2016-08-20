@@ -1,9 +1,7 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import PanelGroup from "../CoreUI/PanelGroup.js";
 import Window from "./Window.js";
 import {observer} from "mobx-react";
-import State from "../State.js";
 
 var Panel = observer(React.createClass({
 
