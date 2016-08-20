@@ -12,14 +12,14 @@ var State = observable({
       resize: "dynamic",
       windows: [
         {
-          height: 228,
+          size: 228,
           widgets: [
             widgets.CheeseUI,
             widgets.PoopUI,
           ]
         },
         {
-          height: 128,
+          size: 128,
           widgets: [
             widgets.CheeseUI,
             widgets.PoopUI,
@@ -32,14 +32,14 @@ var State = observable({
       resize: "fixed",
       windows: [
         {
-          height: 128,
+          size: 128,
           widgets: [
             widgets.CheeseUI,
             widgets.PoopUI,
           ]
         },
         {
-          height: 128,
+          size: 128,
           widgets: [
             widgets.CheeseUI,
             widgets.PoopUI,
@@ -52,7 +52,7 @@ var State = observable({
       resize: "stretch",
       windows: [
         {
-          height: 128,
+          size: 128,
           widgets: [
             widgets.CheeseUI,
             widgets.PoopUI,
@@ -65,21 +65,21 @@ var State = observable({
       resize: "dynamic",
       windows: [
         {
-          height: 128,
+          size: 128,
           widgets: [
             widgets.CheeseUI,
             widgets.PoopUI,
           ]
         },
         {
-          height: 128,
+          size: 128,
           widgets: [
             widgets.CheeseUI,
             widgets.PoopUI,
           ]
         },
         {
-          height: 128,
+          size: 128,
           widgets: [
             widgets.CheeseUI,
             widgets.PoopUI,
@@ -92,21 +92,21 @@ var State = observable({
       resize: "dynamic",
       windows: [
         {
-          height: 128,
+          size: 128,
           widgets: [
             widgets.CheeseUI,
             widgets.PoopUI,
           ]
         },
         {
-          height: 128,
+          size: 128,
           widgets: [
             widgets.CheeseUI,
             widgets.PoopUI,
           ]
         },
         {
-          height: 128,
+          size: 128,
           widgets: [
             widgets.CheeseUI,
             widgets.PoopUI,

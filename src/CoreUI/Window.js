@@ -18,12 +18,9 @@ var Window = observer(React.createClass({
       container: {
         backgroundColor: "rgb(83,83,83)",
         position: "relative",
-        left: this.props.x,
-        top: this.props.y,
         display: "flex",
-        height: this.props.window.height,
-        // minHeight: !this.props.data.stretch? this.props.data.width : 0,
-        flexGrow: this.props.isLast ? 1 : 0,
+        overflow: "hidden",
+        flexGrow: 1,
       },
       window: {
         position: "relative",
@@ -31,19 +28,16 @@ var Window = observer(React.createClass({
         display: "flex",
         flexDirection: "column",
         flexGrow: 1,
-        // borderRadius: "3px 3px 0 0",
         border: "1px solid rgb(56,56,56)",
-        // boxShadow: "0 2px 4px rgba(0,0,0,0.15)",
       },
       content: {
         backgroundColor: "rgb(83,83,83)",
         color: "rgb(180,180,180)",
         fontSize: "8pt",
         flexGrow: 1,
+        flexShrink: 1,
         display: "flex",
-        height: this.state.height,
         overflow:"hidden",
-        // borderBottom: this.props.isLast ? "1px solid rgba(56,56,56,0.5)" : "none",
       },
       titlebar: {
         position: "relative",
@@ -67,17 +61,6 @@ var Window = observer(React.createClass({
         padding: "0 4px",
         fontSize: "10px",
       },
-      border: {
-        boxSizing: "border-box",
-        position: "absolute",
-        width: "calc(100% + 2px)",
-        height: "calc(100% + 2px)",
-        top: -1,
-        left: -1,
-        borderColor: "rgb(0,200,255)",
-        borderStyle: "solid",
-        borderWidth: "2px",
-      }
     }
 
     var WidgetUI = widgets[this.props.window.widgets[this.state.selected]].Widget;
@@ -96,7 +79,6 @@ var Window = observer(React.createClass({
               }, this)
             }
             <div style={style.closebox}>☰</div>
-            {/*<div style={style.closebox}>×</div>*/}
           </div>
 
           <div className="content" style={style.content}>

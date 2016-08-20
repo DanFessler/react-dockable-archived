@@ -13,54 +13,14 @@ var Panel = observer(React.createClass({
     }
   },
 
-  componentDidMount: function() {
-    window.addEventListener('resize', this.calculateStretchWidth);
-    this.calculateStretchWidth();
-  },
-
-  componentWillUnmount: function() {
-    window.removeEventListener('resize', this.calculateStretchWidth);
-  },
-
-  onNextFrame: function(callback) {
-    setTimeout(function () {
-        window.requestAnimationFrame(callback)
-    }, 0)
-  },
-
-  handleEdgeClick: function() {
-    this.props.handleEdgeClick(this.props.index, "left");
-  },
-
-  handleResize: function(i, delta) {
-    State.resizeWindow(this.props.index, i, delta.y);
-  },
-
-  calculateStretchWidth: function() {
-    if (this.props.resize === "stretch") {
-
-      var rect = ReactDOM.findDOMNode(this).getBoundingClientRect();
-
-      State.setPanelSize(
-        this.props.index,
-        rect.width,
-        // recalcalculate again if the width is below minimum
-        function() {this.onNextFrame(this.calculateStretchWidth)}.bind(this)
-      );
-    }
-  },
-
   render: function() {
 
     var style = {
       panel: {
+        flexGrow: 1,
         display: "flex",
-        position: "relative",
         flexDirection: "column",
-        width: this.props.width,
-        minWidth: !this.props.resize === "stretch"? this.props.width : 0,
-        flexGrow: this.props.resize === "stretch"? 1 : 0,
-        flexShrink: this.props.resize === "stretch"? 1 : 0,
+        minWidth: 0,
       },
       titlebar: {
         height: 12,
@@ -83,7 +43,7 @@ var Panel = observer(React.createClass({
 
         <div style={style.titlebar}><div style={style.panelToggle}>{"»"}</div></div>
 
-        <PanelGroup direction="column" onResize={this.handleResize}>
+        <PanelGroup direction="column">
           {
             this.props.windows.map(function(window, i) {
               return (
