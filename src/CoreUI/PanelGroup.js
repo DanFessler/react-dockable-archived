@@ -24,6 +24,7 @@ var PanelGroup = observer(React.createClass({
   },
 
   resizePanel: function(panelIndex, delta) {
+    
     // Default minimum size of panel
     var minsize = 128; var maxsize = 256;
 
@@ -32,8 +33,12 @@ var PanelGroup = observer(React.createClass({
     var resultDelta = delta;
 
     // make the changes and deal with the consequences later
-    this.panels[panelIndex].size = this.panels[panelIndex].size + delta; // SHOULD be 90
+    this.panels[panelIndex].size += delta;
     this.panels[panelIndex+1].size -= delta;
+
+    // These redundant lines are a hacky fix to a Mobx bug in safari
+    this.panels[panelIndex].size = this.panels[panelIndex].size;
+    this.panels[panelIndex+1].size = this.panels[panelIndex+1].size;
 
     // Min and max for THIS panel
     minsize = this.getPanelMinSize(panelIndex);
@@ -174,7 +179,7 @@ var PanelGroup = observer(React.createClass({
     for (var i=0; i < initialChildren.length; i++) {
 
       var panelStyle = {
-        [this.getSizeDirection()]:    this.panels[i].size,
+        [this.getSizeDirection()]: this.panels[i].size,
         ["min"+this.getSizeDirection(true)]: this.panels[i].resize === "stretch"? 0 : this.panels[i].size,
 
         flexGrow: this.panels[i].resize === "stretch"? 1 : 0,
@@ -330,7 +335,6 @@ var Divider = React.createClass({
         maxHeight: this.props.direction === "column" ? this.props.dividerWidth : "auto",
         flexGrow: 0,
         position: "relative",
-        // backgroundColor: "rgba(0,0,0,0.25)"
       },
       handle: {
         position: "absolute",
