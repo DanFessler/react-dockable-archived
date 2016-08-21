@@ -5,6 +5,14 @@ import {observer} from "mobx-react";
 
 var PanelGroup = observer(React.createClass({
 
+  getDefaultProps: function() {
+    return {
+      spacing: 1,
+      direction: "row",
+      panelWidths: []
+    };
+  },
+
   componentWillMount: function() {
     extendObservable(this, {
       panels: []
@@ -12,19 +20,104 @@ var PanelGroup = observer(React.createClass({
 
     // load provided props into state
     if (this.props.children) {
-      for (var i=0; i<React.Children.toArray(this.props.children).length; i++) {
+
+      var defaultSize = 256;
+      var defaultResize = "dynamic";
+      var stretchIncluded = false;
+      var children = React.Children.toArray(this.props.children);
+
+      for (var i=0; i<children.length; i++) {
+
         if (i < this.props.panelWidths.length) {
-          this.panels.push(this.props.panelWidths[i]);
+          var widthObj = {
+            size: this.props.panelWidths[i].size? this.props.panelWidths[i].size : defaultSize,
+            resize: this.props.panelWidths[i].resize? this.props.panelWidths[i].resize : defaultResize,
+          }
+          this.panels.push(widthObj);
         } else {
           // default values if no props are given
-          this.panels.push({size: 256, resize: "stretch"})
+          this.panels.push({size: defaultSize, resize: defaultResize})
         }
+
+        // if none of the panels included was stretchy, make the last one stretchy
+        if (this.panels[i].resize === "stretch") stretchIncluded = true;
+        if (!stretchIncluded && i === children.length-1) this.panels[i].resize = "stretch";
       }
     }
   },
 
+  getSizeDirection: function(caps) {
+    if (caps)
+      return this.props.direction === "column" ? "Height" : "Width";
+    else
+      return this.props.direction === "column" ? "height" : "width";
+  },
+
+  render: function() {
+    var style = {
+      container: {
+        // this line is super important otherwise we get stuck in a recursive
+        // loop when we resize the window too small
+        ["min"+this.getSizeDirection(true)]: this.getPanelGroupMinSize(this.props.spacing),
+
+        display: "flex",
+        flexDirection: this.props.direction,
+        flexGrow: 1,
+      },
+      panel: {
+        flexGrow: 0,
+        display: "flex",
+      },
+    }
+
+    // lets build up a new children array with added resize borders
+    var initialChildren = React.Children.toArray(this.props.children);
+    var newChildren = [];
+    var stretchIncluded = false;
+
+    for (var i=0; i < initialChildren.length; i++) {
+
+      var panelStyle = {
+        [this.getSizeDirection()]: this.panels[i].size,
+        ["min"+this.getSizeDirection(true)]: this.panels[i].resize === "stretch"? 0 : this.panels[i].size,
+
+        flexGrow: this.panels[i].resize === "stretch"? 1 : 0,
+        flexShrink: this.panels[i].resize === "stretch"? 1 : 0,
+        display: "flex",
+      }
+
+      // give position info to children
+      var metadata = {
+        isFirst: (i === 0 ? true : false),
+        isLast: (i === initialChildren.length-1 ? true : false),
+        // TODO for some reason this function isn't being assigned correctly
+        onWindowResize: this.panels[i].resize === "stretch"? this.setPanelSize : null
+      }
+
+      // if none of the panels included was stretchy, make the last one stretchy
+      if (this.panels[i].resize === "stretch") stretchIncluded = true;
+      if (!stretchIncluded && metadata.isLast) metadata.resize = "stretch";
+
+      // push children with added metadata
+      newChildren.push(
+        <Panel style={panelStyle} key={"panel"+i} panelID={i} resize={this.panels[i].resize} {...metadata}>{initialChildren[i]}</Panel>
+      );
+
+      // add a handle between panels
+      if (i < initialChildren.length-1) {
+        newChildren.push(<Divider key={"divider"+i} panelID={i} handleResize={this.handleResize} dividerWidth={this.props.spacing} direction={this.props.direction} showHandles={this.props.showHandles}/>);
+      }
+    }
+
+    return <div className="panelGroup" style={style.container}>{newChildren}</div>
+  },
+
+  handleResize: function(i, delta) {
+    return this.resizePanel(i, this.props.direction === "row" ? delta.x : delta.y);
+  },
+
   resizePanel: function(panelIndex, delta) {
-    
+
     // Default minimum size of panel
     var minsize = 128; var maxsize = 256;
 
@@ -133,84 +226,6 @@ var PanelGroup = observer(React.createClass({
     if (callback && size < this.getPanelMinSize(panelIndex)) {
       callback();
     }
-  },
-
-  getDefaultProps: function() {
-    return {
-      spacing: 1,
-      direction: "row",
-      panelWidths: []
-    };
-  },
-
-  handleResize: function(i, delta) {
-    return this.resizePanel(i, this.props.direction === "row" ? delta.x : delta.y);
-  },
-
-  getSizeDirection: function(caps) {
-    if (caps)
-      return this.props.direction === "column" ? "Height" : "Width";
-    else
-      return this.props.direction === "column" ? "height" : "width";
-  },
-
-  render: function() {
-    var style = {
-      container: {
-        // this line is super important otherwise we get stuck in a recursive
-        // loop when we resize the window too small
-        ["min"+this.getSizeDirection(true)]: this.getPanelGroupMinSize(this.props.spacing),
-
-        display: "flex",
-        flexDirection: this.props.direction,
-        flexGrow: 1,
-      },
-      panel: {
-        flexGrow: 0,
-        display: "flex",
-      },
-    }
-
-    // lets build up a new children array with added resize borders
-    var initialChildren = React.Children.toArray(this.props.children);
-    var newChildren = [];
-    var stretchIncluded = false;
-
-    for (var i=0; i < initialChildren.length; i++) {
-
-      var panelStyle = {
-        [this.getSizeDirection()]: this.panels[i].size,
-        ["min"+this.getSizeDirection(true)]: this.panels[i].resize === "stretch"? 0 : this.panels[i].size,
-
-        flexGrow: this.panels[i].resize === "stretch"? 1 : 0,
-        flexShrink: this.panels[i].resize === "stretch"? 1 : 0,
-        display: "flex",
-      }
-
-      // give position info to children
-      var metadata = {
-        isFirst: (i === 0 ? true : false),
-        isLast: (i === initialChildren.length-1 ? true : false),
-        // TODO for some reason this function isn't being assigned correctly
-        onWindowResize: this.panels[i].resize === "stretch"? this.setPanelSize : null
-      }
-
-      // if none of the panels included was stretchy, make the last one stretchy
-      if (this.panels[i].resize === "stretch") stretchIncluded = true;
-      if (!stretchIncluded && metadata.isLast) metadata.resize = "stretch";
-
-      // push children with added metadata
-      newChildren.push(
-        <Panel style={panelStyle} key={"panel"+i} panelID={i} resize={this.panels[i].resize} {...metadata}>{initialChildren[i]}</Panel>
-      );
-
-      // add a handle between panels
-      if (i < initialChildren.length-1) {
-        newChildren.push(<Divider key={"divider"+i} panelID={i} handleResize={this.handleResize} dividerWidth={this.props.spacing} direction={this.props.direction} showHandles={this.props.showHandles}/>);
-      }
-    }
-
-    return <div className="panelGroup" style={style.container}>{newChildren}</div>
   },
 }))
 

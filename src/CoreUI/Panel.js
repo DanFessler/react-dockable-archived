@@ -36,20 +36,22 @@ var Panel = observer(React.createClass({
       }
     };
 
+    var panelWidths = this.props.windows.map(function(panel) {
+      return { size: panel.size, resize: panel.resize }
+    }, this)
+
+    var windows = this.props.windows.map(function(window, i) {
+      return <Window key={i} window={window}/>
+    }, this)
+
     return (
       <div className="panel" style={style.panel}>
-
         <div className="panelHeader" style={style.titlebar}><div style={style.panelToggle}>{"»"}</div></div>
 
-        <PanelGroup direction="column">
-          {
-            this.props.windows.map(function(window, i) {
-              return (
-                <Window key={i} window={window}/>
-              );
-            }, this)
-          }
+        <PanelGroup direction="column" panelWidths={panelWidths}>
+          {windows}
         </PanelGroup>
+
       </div>
     )
   }

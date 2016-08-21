@@ -42,47 +42,22 @@ var App = observer(React.createClass({
       }
     }
 
+    var panelWidths = State.panels.map(function(panel) {
+      return { size: panel.size, resize: panel.resize }
+    }, this)
+
+    var panels = State.panels.map(function(panel, i, arr) {
+      return <Panel index={i} key={panel.key? panel.key : i} windows={panel.windows} />
+    }, this)
+
     return (
       <div style={style.root}>
         <div style={style.header}></div>
 
-        <PanelGroup direction="row">
-          {
-            State.panels.map(function(panel, i, arr) {
-              return <Panel
-                index={i}
-                key={panel.key? panel.key : i}
-                resize={panel.resize}
-                width={panel.size}
-                windows={panel.windows}/>;
-            }, this)
-          }
+        <PanelGroup direction="row" panelWidths={panelWidths}>
+          {panels}
         </PanelGroup>
 
-        {/* testcase which breaks on safari */}
-        {/* <PanelGroupTest direction="row" spacing={3}>
-          <PanelGroupTest direction="column" spacing={3}>
-          <div>test1</div>
-          <div>test2</div>
-          </PanelGroupTest>
-          <PanelGroupTest direction="column" spacing={3}>
-          <div>test1</div>
-          <div>test2</div>
-          </PanelGroupTest>
-          <PanelGroupTest direction="column" spacing={3}>
-          <div>test1</div>
-          </PanelGroupTest>
-          <PanelGroupTest direction="column" spacing={3}>
-          <div>test1</div>
-          <div>test2</div>
-          <div>test3</div>
-          </PanelGroupTest>
-          <PanelGroupTest direction="column" spacing={3}>
-          <div>test1</div>
-          <div>test2</div>
-          <div>test3</div>
-          </PanelGroupTest>
-        </PanelGroupTest> */}
       </div>
     );
   }
