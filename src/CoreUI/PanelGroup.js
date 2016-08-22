@@ -1,9 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {extendObservable} from "mobx";
-import {observer} from "mobx-react";
 
-var PanelGroup = observer(React.createClass({
+var PanelGroup = React.createClass({
 
   getDefaultProps: function() {
     return {
@@ -13,10 +11,8 @@ var PanelGroup = observer(React.createClass({
     };
   },
 
-  componentWillMount: function() {
-    extendObservable(this, {
-      panels: []
-    })
+  getInitialState: function() {
+    var panels = []
 
     // load provided props into state
     if (this.props.children) {
@@ -33,16 +29,20 @@ var PanelGroup = observer(React.createClass({
             size: this.props.panelWidths[i].size? this.props.panelWidths[i].size : defaultSize,
             resize: this.props.panelWidths[i].resize? this.props.panelWidths[i].resize : defaultResize,
           }
-          this.panels.push(widthObj);
+          panels.push(widthObj);
         } else {
           // default values if no props are given
-          this.panels.push({size: defaultSize, resize: defaultResize})
+          panels.push({size: defaultSize, resize: defaultResize})
         }
 
         // if none of the panels included was stretchy, make the last one stretchy
-        if (this.panels[i].resize === "stretch") stretchIncluded = true;
-        if (!stretchIncluded && i === children.length-1) this.panels[i].resize = "stretch";
+        if (panels[i].resize === "stretch") stretchIncluded = true;
+        if (!stretchIncluded && i === children.length-1) panels[i].resize = "stretch";
       }
+    }
+
+    return {
+      panels: panels
     }
   },
 
@@ -78,11 +78,11 @@ var PanelGroup = observer(React.createClass({
     for (var i=0; i < initialChildren.length; i++) {
 
       var panelStyle = {
-        [this.getSizeDirection()]: this.panels[i].size,
-        ["min"+this.getSizeDirection(true)]: this.panels[i].resize === "stretch"? 0 : this.panels[i].size,
+        [this.getSizeDirection()]: this.state.panels[i].size,
+        ["min"+this.getSizeDirection(true)]: this.state.panels[i].resize === "stretch"? 0 : this.state.panels[i].size,
 
-        flexGrow: this.panels[i].resize === "stretch"? 1 : 0,
-        flexShrink: this.panels[i].resize === "stretch"? 1 : 0,
+        flexGrow: this.state.panels[i].resize === "stretch"? 1 : 0,
+        flexShrink: this.state.panels[i].resize === "stretch"? 1 : 0,
         display: "flex",
       }
 
@@ -91,16 +91,16 @@ var PanelGroup = observer(React.createClass({
         isFirst: (i === 0 ? true : false),
         isLast: (i === initialChildren.length-1 ? true : false),
         // TODO for some reason this function isn't being assigned correctly
-        onWindowResize: this.panels[i].resize === "stretch"? this.setPanelSize : null
+        onWindowResize: this.state.panels[i].resize === "stretch"? this.setPanelSize : null
       }
 
       // if none of the panels included was stretchy, make the last one stretchy
-      if (this.panels[i].resize === "stretch") stretchIncluded = true;
+      if (this.state.panels[i].resize === "stretch") stretchIncluded = true;
       if (!stretchIncluded && metadata.isLast) metadata.resize = "stretch";
 
       // push children with added metadata
       newChildren.push(
-        <Panel style={panelStyle} key={"panel"+i} panelID={i} resize={this.panels[i].resize} {...metadata}>{initialChildren[i]}</Panel>
+        <Panel style={panelStyle} key={"panel"+i} panelID={i} resize={this.state.panels[i].resize} {...metadata}>{initialChildren[i]}</Panel>
       );
 
       // add a handle between panels
@@ -113,10 +113,17 @@ var PanelGroup = observer(React.createClass({
   },
 
   handleResize: function(i, delta) {
-    return this.resizePanel(i, this.props.direction === "row" ? delta.x : delta.y);
+
+    var tempPanels = this.state.panels.slice();
+    console.log(tempPanels);
+
+    var returnDelta = this.resizePanel(i, this.props.direction === "row" ? delta.x : delta.y, tempPanels);
+    this.setState({panels: tempPanels});
+
+    return returnDelta;
   },
 
-  resizePanel: function(panelIndex, delta) {
+  resizePanel: function(panelIndex, delta, panels) {
 
     // Default minimum size of panel
     var minsize = 128; var maxsize = 256;
@@ -126,108 +133,107 @@ var PanelGroup = observer(React.createClass({
     var resultDelta = delta;
 
     // make the changes and deal with the consequences later
-    this.panels[panelIndex].size += delta;
-    this.panels[panelIndex+1].size -= delta;
-
-    // These redundant lines are a hacky fix to a Mobx bug in safari
-    this.panels[panelIndex].size = this.panels[panelIndex].size;
-    this.panels[panelIndex+1].size = this.panels[panelIndex+1].size;
+    panels[panelIndex].size += delta;
+    panels[panelIndex+1].size -= delta;
 
     // Min and max for THIS panel
-    minsize = this.getPanelMinSize(panelIndex);
-    maxsize = this.getPanelMaxSize(panelIndex);
+    minsize = this.getPanelMinSize(panelIndex, panels);
+    maxsize = this.getPanelMaxSize(panelIndex, panels);
 
     // if we made this panel too small
-    if (this.panels[panelIndex].size < minsize) {
-      delta = minsize - this.panels[panelIndex].size;
+    if (panels[panelIndex].size < minsize) {
+      delta = minsize - panels[panelIndex].size;
 
       if (panelIndex === 0)
-        resultDelta += this.resizePanel(panelIndex, delta);
+        resultDelta += this.resizePanel(panelIndex, delta, panels);
       else
-        resultDelta += this.resizePanel(panelIndex-1, -delta);
+        resultDelta += this.resizePanel(panelIndex-1, -delta, panels);
     };
 
     // if we made this panel too big
-    if (maxsize !== 0 && this.panels[panelIndex].size > maxsize) {
-      delta = this.panels[panelIndex].size - maxsize;
+    if (maxsize !== 0 && panels[panelIndex].size > maxsize) {
+      delta = panels[panelIndex].size - maxsize;
 
       if (panelIndex === 0)
-        resultDelta += this.resizePanel(panelIndex, -delta);
+        resultDelta += this.resizePanel(panelIndex, -delta, panels);
       else
-        resultDelta += this.resizePanel(panelIndex-1, delta);
+        resultDelta += this.resizePanel(panelIndex-1, delta, panels);
     };
 
 
     // Min and max for NEXT panel
-    minsize = this.getPanelMinSize(panelIndex+1);
-    maxsize = this.getPanelMaxSize(panelIndex+1);
+    minsize = this.getPanelMinSize(panelIndex+1, panels);
+    maxsize = this.getPanelMaxSize(panelIndex+1, panels);
 
     // if we made the next panel too small
-    if (this.panels[panelIndex+1].size < minsize) {
-      delta = minsize - this.panels[panelIndex+1].size;
+    if (panels[panelIndex+1].size < minsize) {
+      delta = minsize - panels[panelIndex+1].size;
 
-      if (panelIndex+1 === this.panels.length-1)
-        resultDelta += this.resizePanel(panelIndex, -delta);
+      if (panelIndex+1 === panels.length-1)
+        resultDelta += this.resizePanel(panelIndex, -delta, panels);
       else
-        resultDelta += this.resizePanel(panelIndex+1, delta);
+        resultDelta += this.resizePanel(panelIndex+1, delta, panels);
     };
 
     // if we made the next panel too big
-    if (maxsize !== 0 && this.panels[panelIndex+1].size > maxsize) {
-      delta = this.panels[panelIndex+1].size - maxsize;
+    if (maxsize !== 0 && panels[panelIndex+1].size > maxsize) {
+      delta = panels[panelIndex+1].size - maxsize;
 
-      if (panelIndex+1 === this.panels.length-1)
-        resultDelta += this.resizePanel(panelIndex, delta);
+      if (panelIndex+1 === panels.length-1)
+        resultDelta += this.resizePanel(panelIndex, delta, panels);
       else
-        resultDelta += this.resizePanel(panelIndex+1, -delta);
+        resultDelta += this.resizePanel(panelIndex+1, -delta, panels);
     };
 
     return resultDelta;
   },
 
-  getPanelMinSize: function(panelIndex) {
-    if (this.panels[panelIndex].resize === "fixed") {
-      if (!this.panels[panelIndex].fixedSize) {
-        this.panels[panelIndex].fixedSize = this.panels[panelIndex].size;
+  getPanelMinSize: function(panelIndex, panels) {
+    if (panels[panelIndex].resize === "fixed") {
+      if (!panels[panelIndex].fixedSize) {
+        panels[panelIndex].fixedSize = panels[panelIndex].size;
       }
-      return this.panels[panelIndex].fixedSize;
+      return panels[panelIndex].fixedSize;
     }
-    return 64;
+    return 20;
   },
 
-  getPanelMaxSize: function(panelIndex) {
-    if (this.panels[panelIndex].resize === "fixed") {
-      if (!this.panels[panelIndex].fixedSize) {
-        this.panels[panelIndex].fixedSize = this.panels[panelIndex].size;
+  getPanelMaxSize: function(panelIndex, panels) {
+    if (panels[panelIndex].resize === "fixed") {
+      if (!panels[panelIndex].fixedSize) {
+        panels[panelIndex].fixedSize = panels[panelIndex].size;
       }
-      return this.panels[panelIndex].fixedSize;
+      return panels[panelIndex].fixedSize;
     }
     return 0;
   },
 
   getPanelGroupMinSize: function(spacing) {
     var size = 0;
-    for (var i = 0; i < this.panels.length; i++) {
-      size += this.getPanelMinSize(i);
+    for (var i = 0; i < this.state.panels.length; i++) {
+      size += this.getPanelMinSize(i, this.state.panels);
     }
-    return size + ((this.panels.length-1) * spacing)
+    return size + ((this.state.panels.length-1) * spacing)
   },
 
   setPanelSize: function(panelIndex, size, callback) {
-    this.panels[panelIndex].size = this.props.direction === "column"? size.y : size.x;
+
+    var tempPanels = this.state.panels;
+    tempPanels[panelIndex].size = this.props.direction === "column"? size.y : size.x;
+    this.setState({panels:tempPanels});
 
     if (panelIndex > 0) {
-      this.resizePanel(panelIndex-1, 0);
+      this.handleResize(panelIndex-1, {x:0, y:0});
     }
-    else if (this.panels.length > 2) {
-      this.resizePanel(panelIndex+1, 0);
+    else if (this.state.panels.length > 2) {
+      this.handleResize(panelIndex+1, {x:0, y:0});
     }
 
-    if (callback && size < this.getPanelMinSize(panelIndex)) {
+    if (callback && size < this.getPanelMinSize(panelIndex, this.state.panels)) {
       callback();
     }
   },
-}))
+})
 
 var Panel = React.createClass({
   componentDidMount: function() {
