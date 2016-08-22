@@ -18,7 +18,7 @@ var PanelGroup = React.createClass({
     if (this.props.children) {
 
       var defaultSize = 256;
-      var defaultResize = "dynamic";
+      var defaultResize = "stretch";
       var stretchIncluded = false;
       var children = React.Children.toArray(this.props.children);
 
@@ -27,7 +27,8 @@ var PanelGroup = React.createClass({
         if (i < this.props.panelWidths.length) {
           var widthObj = {
             size: this.props.panelWidths[i].size? this.props.panelWidths[i].size : defaultSize,
-            resize: this.props.panelWidths[i].resize? this.props.panelWidths[i].resize : defaultResize,
+            resize: this.props.panelWidths[i].resize? this.props.panelWidths[i].resize :
+                    this.props.panelWidths[i].size? "dynamic" : defaultResize,
           }
           panels.push(widthObj);
         } else {
@@ -58,6 +59,7 @@ var PanelGroup = React.createClass({
       container: {
         // this line is super important otherwise we get stuck in a recursive
         // loop when we resize the window too small
+        width: "100%", height: "100%",
         ["min"+this.getSizeDirection(true)]: this.getPanelGroupMinSize(this.props.spacing),
 
         display: "flex",
@@ -84,6 +86,7 @@ var PanelGroup = React.createClass({
         flexGrow: this.state.panels[i].resize === "stretch"? 1 : 0,
         flexShrink: this.state.panels[i].resize === "stretch"? 1 : 0,
         display: "flex",
+        overflow: "hidden",
       }
 
       // give position info to children
