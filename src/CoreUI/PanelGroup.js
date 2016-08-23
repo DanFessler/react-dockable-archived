@@ -87,6 +87,7 @@ var PanelGroup = React.createClass({
         flexShrink: this.state.panels[i].resize === "stretch"? 1 : 0,
         display: "flex",
         overflow: "hidden",
+        position: "relative",
       }
 
       // give position info to children
@@ -94,7 +95,8 @@ var PanelGroup = React.createClass({
         isFirst: (i === 0 ? true : false),
         isLast: (i === initialChildren.length-1 ? true : false),
         // TODO for some reason this function isn't being assigned correctly
-        onWindowResize: this.state.panels[i].resize === "stretch"? this.setPanelSize : null
+        onWindowResize: this.state.panels[i].resize === "stretch"? this.setPanelSize : null,
+        resize: this.state.panels[i].resize
       }
 
       // if none of the panels included was stretchy, make the last one stretchy
@@ -239,12 +241,21 @@ var PanelGroup = React.createClass({
 })
 
 var Panel = React.createClass({
+  onResizeObjectLoad() {
+    this.refs.resizeObject.contentDocument.defaultView.addEventListener(
+    "resize", () => this.calculateStretchWidth());
+  },
+
   componentDidMount: function() {
-    window.addEventListener('resize', this.calculateStretchWidth);
-    this.calculateStretchWidth();
+    if (this.props.resize === "stretch") {
+      this.refs.resizeObject.addEventListener("load", () => this.onResizeObjectLoad());
+      this.refs.resizeObject.data = "about:blank";
+      // window.addEventListener('resize', this.calculateStretchWidth);
+      this.calculateStretchWidth();
+    }
   },
   componentWillUnmount: function() {
-    window.removeEventListener('resize', this.calculateStretchWidth);
+    // window.removeEventListener('resize', this.calculateStretchWidth);
   },
 
   onNextFrame: function(callback) {
@@ -267,8 +278,24 @@ var Panel = React.createClass({
   },
 
   render: function() {
+    var style = {
+      resizeObject: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        zIndex: -1,
+        // IE & Edge show a black line.
+        opacity: 0,
+      }
+    }
+    const resizeObject = this.props.resize === "stretch" ? <object style={style.resizeObject} ref="resizeObject" type="text/html"></object> : null;
     return (
-      <div className="panelWrapper" style={this.props.style}>{this.props.children}</div>
+      <div className="panelWrapper" style={this.props.style}>
+        {resizeObject}
+        {this.props.children}
+      </div>
     )
   }
 })
