@@ -116,13 +116,9 @@ var PanelGroup = React.createClass({
   },
 
   handleResize: function(i, delta) {
-
     var tempPanels = this.state.panels.slice();
-    console.log(tempPanels);
-
     var returnDelta = this.resizePanel(i, this.props.direction === "row" ? delta.x : delta.y, tempPanels);
     this.setState({panels: tempPanels});
-
     return returnDelta;
   },
 
@@ -221,19 +217,23 @@ var PanelGroup = React.createClass({
 
   setPanelSize: function(panelIndex, size, callback) {
 
-    var tempPanels = this.state.panels;
-    tempPanels[panelIndex].size = this.props.direction === "column"? size.y : size.x;
-    this.setState({panels:tempPanels});
+    size = this.props.direction === "column"? size.y : size.x;
 
-    if (panelIndex > 0) {
-      this.handleResize(panelIndex-1, {x:0, y:0});
-    }
-    else if (this.state.panels.length > 2) {
-      this.handleResize(panelIndex+1, {x:0, y:0});
-    }
+    if (size !== this.state.panels[panelIndex].size){
+      var tempPanels = this.state.panels;
+      tempPanels[panelIndex].size = size;
+      this.setState({panels:tempPanels});
 
-    if (callback && size < this.getPanelMinSize(panelIndex, this.state.panels)) {
-      callback();
+      if (panelIndex > 0) {
+        this.handleResize(panelIndex-1, {x:0, y:0});
+      }
+      else if (this.state.panels.length > 2) {
+        this.handleResize(panelIndex+1, {x:0, y:0});
+      }
+
+      if (callback) {
+        callback();
+      }
     }
   },
 })
