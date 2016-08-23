@@ -43,20 +43,16 @@ var App = observer(React.createClass({
     }
 
     var panelWidths = State.panels.map(function(panel) {
-      return { size: panel.size, resize: panel.resize }
+      return {
+        size: panel.size? panel.size : null,
+        resize: panel.resize? panel.resize : null,
+        minSize: panel.minSize? panel.minSize : null,
+      }
     }, this)
 
     var panels = State.panels.map(function(panel, i, arr) {
       return <Panel index={i} key={panel.key? panel.key : i} windows={panel.windows} />
     }, this)
-
-    var testStyle = {
-      flexGrow: 1,
-      // flexDirection: "row",
-      // width: "100%",
-      // height: "100%",
-      backgroundColor: "grey",
-    }
 
     return (
       <div style={style.root}>
@@ -67,17 +63,17 @@ var App = observer(React.createClass({
         </PanelGroup>
 
       </div>
-      // <PanelGroup direction="row" spacing={2} panelWidths={[{size: 100}]}>
-      //   <div style={testStyle}>div 1</div>
-      //   <div style={testStyle}>div 2</div>
-      //   <PanelGroup direction="column" spacing={2}>
-      //     <PanelGroup direction="row" spacing={2} panelWidths={[{size: 100},{size: 100},{size: 100}]}>
-      //       <div style={testStyle}>div 3</div>
-      //       <div style={testStyle}>div 4</div>
-      //       <div style={testStyle}>div 5</div>
+      // <PanelGroup direction="row" spacing={2} panelWidths={[{size: 100}]} panelColor="white" borderColor="grey">
+      //   <div>div 1</div>
+      //   <div>div 2</div>
+      //   <PanelGroup direction="column" spacing={2} panelColor="white" borderColor="grey">
+      //     <PanelGroup direction="row" spacing={2} panelWidths={[{size: 100},{size: 100},{size: 100}]} panelColor="white" borderColor="grey">
+      //       <div>div 3</div>
+      //       <div>div 4</div>
+      //       <div>div 5</div>
       //     </PanelGroup>
-      //     <div style={testStyle}>div 4</div>
-      //     <div style={testStyle}>div 5</div>
+      //     <div>div 4</div>
+      //     <div>div 5</div>
       //   </PanelGroup>
       // </PanelGroup>
     );

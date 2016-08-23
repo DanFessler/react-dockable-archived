@@ -29,10 +29,12 @@ var State = observable({
     },
     {
       size: 150,
+      minSize: 150,
       resize: "dynamic",
       windows: [
         {
           size: 128,
+          minSize: 200,
           widgets: [
             widgets.CheeseUI,
             widgets.PoopUI,

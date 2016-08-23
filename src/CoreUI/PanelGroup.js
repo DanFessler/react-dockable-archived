@@ -22,6 +22,7 @@ var PanelGroup = React.createClass({
     if (this.props.children) {
 
       var defaultSize = 256;
+      var defaultMinSize = 48;
       var defaultResize = "stretch";
       var stretchIncluded = false;
       var children = React.Children.toArray(this.props.children);
@@ -31,6 +32,7 @@ var PanelGroup = React.createClass({
         if (i < this.props.panelWidths.length) {
           var widthObj = {
             size: this.props.panelWidths[i].size? this.props.panelWidths[i].size : defaultSize,
+            minSize: this.props.panelWidths[i].minSize? this.props.panelWidths[i].minSize : defaultMinSize,
             resize: this.props.panelWidths[i].resize? this.props.panelWidths[i].resize :
                     this.props.panelWidths[i].size? "dynamic" : defaultResize,
           }
@@ -93,6 +95,7 @@ var PanelGroup = React.createClass({
         overflow: "hidden",
         position: "relative",
       }
+      Object.assign(panelStyle, {backgroundColor: this.props.panelColor});
 
       // give position info to children
       var metadata = {
@@ -114,7 +117,7 @@ var PanelGroup = React.createClass({
 
       // add a handle between panels
       if (i < initialChildren.length-1) {
-        newChildren.push(<Divider key={"divider"+i} panelID={i} handleResize={this.handleResize} dividerWidth={this.props.spacing} direction={this.props.direction} showHandles={this.props.showHandles}/>);
+        newChildren.push(<Divider borderColor={this.props.borderColor} key={"divider"+i} panelID={i} handleResize={this.handleResize} dividerWidth={this.props.spacing} direction={this.props.direction} showHandles={this.props.showHandles}/>);
       }
     }
 
@@ -200,7 +203,7 @@ var PanelGroup = React.createClass({
       }
       return panels[panelIndex].fixedSize;
     }
-    return 48;
+    return panels[panelIndex].minSize;
   },
 
   getPanelMaxSize: function(panelIndex, panels) {
@@ -402,6 +405,8 @@ var Divider = React.createClass({
         zIndex: 100,
       }
     }
+    Object.assign(style.divider, {backgroundColor: this.props.borderColor});
+
     return (
       <div className="divider" style={style.divider} onMouseDown={this.onMouseDown}>
         <div style={style.handle}></div>

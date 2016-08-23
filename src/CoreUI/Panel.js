@@ -37,7 +37,11 @@ var Panel = observer(React.createClass({
     };
 
     var panelWidths = this.props.windows.map(function(panel) {
-      return { size: panel.size, resize: panel.resize }
+      return {
+        size: panel.size? panel.size : null,
+        resize: panel.resize? panel.resize : null,
+        minSize: panel.minSize? panel.minSize : null,
+      }
     }, this)
 
     var windows = this.props.windows.map(function(window, i) {
