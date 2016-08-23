@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 
 // TODO
 // Add hooks for controlling state outside of component
-// Manage min-sizes per panel
 
 var PanelGroup = React.createClass({
 
@@ -16,25 +15,33 @@ var PanelGroup = React.createClass({
   },
 
   getInitialState: function() {
+    return this.loadPanels(this.props)
+  },
+
+  componentWillReceiveProps: function(props) {
+    this.setState(this.loadPanels(props));
+  },
+
+  loadPanels: function(props) {
     var panels = []
 
     // load provided props into state
-    if (this.props.children) {
+    if (props.children) {
 
       var defaultSize = 256;
       var defaultMinSize = 48;
       var defaultResize = "stretch";
       var stretchIncluded = false;
-      var children = React.Children.toArray(this.props.children);
+      var children = React.Children.toArray(props.children);
 
       for (var i=0; i<children.length; i++) {
 
-        if (i < this.props.panelWidths.length) {
+        if (i < props.panelWidths.length) {
           var widthObj = {
-            size: this.props.panelWidths[i].size? this.props.panelWidths[i].size : defaultSize,
-            minSize: this.props.panelWidths[i].minSize? this.props.panelWidths[i].minSize : defaultMinSize,
-            resize: this.props.panelWidths[i].resize? this.props.panelWidths[i].resize :
-                    this.props.panelWidths[i].size? "dynamic" : defaultResize,
+            size: props.panelWidths[i].size? props.panelWidths[i].size : defaultSize,
+            minSize: props.panelWidths[i].minSize? props.panelWidths[i].minSize : defaultMinSize,
+            resize: props.panelWidths[i].resize? props.panelWidths[i].resize :
+                    props.panelWidths[i].size? "dynamic" : defaultResize,
           }
           panels.push(widthObj);
         } else {
@@ -63,11 +70,8 @@ var PanelGroup = React.createClass({
   render: function() {
     var style = {
       container: {
-        // this line is super important otherwise we get stuck in a recursive
-        // loop when we resize the window too small
         width: "100%", height: "100%",
         ["min"+this.getSizeDirection(true)]: this.getPanelGroupMinSize(this.props.spacing),
-
         display: "flex",
         flexDirection: this.props.direction,
         flexGrow: 1,
