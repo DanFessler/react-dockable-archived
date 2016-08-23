@@ -40,19 +40,17 @@ var Window = observer(React.createClass({
         backgroundColor: "rgb(66,66,66)",
       },
       closebox: {
-        position: "absolute",
-        // borderLeft: "0.5px solid rgb(56,56,56)",
         boxSizing: "border-box",
         borderBottom: "1px solid rgb(56,56,56)",
         backgroundColor: "rgb(66,66,66)",
         color: "grey",
         width: 20,
         height: "calc(100% + 1px)",
-        top: 0,
-        right: 0,
         textAlign: "center",
         padding: "0 4px",
         fontSize: "10px",
+        flexShrink: 0,
+        flexGrow: 0,
       },
     }
 
@@ -70,6 +68,7 @@ var Window = observer(React.createClass({
               );
             }, this)
           }
+          <div style={{flexGrow:1}}></div>
           <div style={style.closebox}>☰</div>
         </div>
 

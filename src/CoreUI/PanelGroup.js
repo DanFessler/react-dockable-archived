@@ -200,7 +200,7 @@ var PanelGroup = React.createClass({
       }
       return panels[panelIndex].fixedSize;
     }
-    return 20;
+    return 48;
   },
 
   getPanelMaxSize: function(panelIndex, panels) {
