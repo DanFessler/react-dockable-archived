@@ -50,6 +50,14 @@ var App = observer(React.createClass({
       return <Panel index={i} key={panel.key? panel.key : i} windows={panel.windows} />
     }, this)
 
+    var testStyle = {
+      flexGrow: 1,
+      // flexDirection: "row",
+      // width: "100%",
+      // height: "100%",
+      backgroundColor: "grey",
+    }
+
     return (
       <div style={style.root}>
         <div style={style.header}></div>
@@ -59,6 +67,19 @@ var App = observer(React.createClass({
         </PanelGroup>
 
       </div>
+      // <PanelGroup direction="row" spacing={2} panelWidths={[{size: 100}]}>
+      //   <div style={testStyle}>div 1</div>
+      //   <div style={testStyle}>div 2</div>
+      //   <PanelGroup direction="column" spacing={2}>
+      //     <PanelGroup direction="row" spacing={2} panelWidths={[{size: 100},{size: 100},{size: 100}]}>
+      //       <div style={testStyle}>div 3</div>
+      //       <div style={testStyle}>div 4</div>
+      //       <div style={testStyle}>div 5</div>
+      //     </PanelGroup>
+      //     <div style={testStyle}>div 4</div>
+      //     <div style={testStyle}>div 5</div>
+      //   </PanelGroup>
+      // </PanelGroup>
     );
   }
 }));

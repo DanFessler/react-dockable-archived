@@ -1,6 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+// TODO
+// Add hooks for controlling state outside of component
+// Manage min-sizes per panel
+
 var PanelGroup = React.createClass({
 
   getDefaultProps: function() {

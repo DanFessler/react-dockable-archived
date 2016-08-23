@@ -29,7 +29,7 @@ var State = observable({
     },
     {
       size: 150,
-      resize: "fixed",
+      resize: "dynamic",
       windows: [
         {
           size: 128,
