@@ -20,7 +20,8 @@ var PanelGroup = React.createClass({
 
   // reload panel configuration if props update
   componentWillReceiveProps: function(props) {
-    this.setState(this.loadPanels(props));
+    if (this.props !== props)
+      this.setState(this.loadPanels(props));
   },
 
   // load provided props into state
@@ -39,7 +40,7 @@ var PanelGroup = React.createClass({
 
       for (var i=0; i<children.length; i++) {
 
-        if (i < props.panelWidths.length) {
+        if (i < props.panelWidths.length && props.panelWidths[i]) {
           var widthObj = {
             size:    props.panelWidths[i].size? props.panelWidths[i].size : defaultSize,
             minSize: props.panelWidths[i].minSize? props.panelWidths[i].minSize : defaultMinSize,
@@ -49,7 +50,7 @@ var PanelGroup = React.createClass({
           panels.push(widthObj);
         } else {
           // default values if no props are given
-          panels.push({size: defaultSize, resize: defaultResize})
+          panels.push({size: defaultSize, resize: defaultResize, minSize: defaultMinSize})
         }
 
         // if none of the panels included was stretchy, make the last one stretchy

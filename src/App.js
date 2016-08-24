@@ -63,7 +63,7 @@ var App = observer(React.createClass({
         </PanelGroup>
 
       </div>
-      // <PanelGroup direction="row" spacing={2} panelWidths={[{size: 100}]} panelColor="white" borderColor="grey">
+      // <PanelGroup direction="row" spacing={2} panelWidths={[{size: 100},null,{minSize:144}]} panelColor="white" borderColor="grey">
       //   <div>div 1</div>
       //   <div>div 2</div>
       //   <PanelGroup direction="column" spacing={2} panelColor="white" borderColor="grey">
