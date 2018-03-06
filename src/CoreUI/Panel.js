@@ -50,7 +50,7 @@ var Panel = observer(React.createClass({
 
     return (
       <div className="panel" style={style.panel}>
-        <div className="panelHeader" style={style.titlebar}><div style={style.panelToggle}>{"»"}</div></div>
+        {/* <div className="panelHeader" style={style.titlebar}><div style={style.panelToggle}>{"»"}</div></div> */}
 
         <PanelGroup direction="column" panelWidths={panelWidths}>
           {windows}

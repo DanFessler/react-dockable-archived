@@ -22,6 +22,7 @@ var Window = observer(React.createClass({
         flexDirection: "column",
         flexGrow: 1,
         border: "1px solid rgb(56,56,56)",
+        borderRadius: "3px",
       },
       content: {
         backgroundColor: "rgb(83,83,83)",
@@ -32,7 +33,7 @@ var Window = observer(React.createClass({
       },
       titlebar: {
         position: "relative",
-        height: 17,
+        height: 20,
         minHeight: 17,
         borderBottom: "1px solid rgb(56,56,56)",
         boxSizing: "border-box",
@@ -47,8 +48,10 @@ var Window = observer(React.createClass({
         width: 20,
         height: "calc(100% + 1px)",
         textAlign: "center",
-        padding: "0 4px",
+        padding: "2px 4px",
         fontSize: "10px",
+        fontWeight: "bold",
+        transform: "scale(1.2,1)",
         flexShrink: 0,
         flexGrow: 0,
       },
@@ -102,7 +105,7 @@ var WindowTab = React.createClass({
     var style = reactMerge({
       tab: {
         height: "calc(100% + 1px)",
-        padding: "2px 6px",
+        padding: "4px 8px",
         boxSizing: "border-box",
         overflow: "hidden",
         whiteSpace: "nowrap",
