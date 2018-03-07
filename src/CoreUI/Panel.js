@@ -30,7 +30,7 @@ var Panel = observer(React.createClass({
       },
       titlebar: {
         height: 12,
-        borderBottom: "1px solid rgba(0,0,0,0.075)",
+        // borderBottom: "1px solid rgba(0,0,0,0.075)",
         // marginTop: 1,
         // borderBottom: "none",
         backgroundColor: "rgb(66,66,66)",
@@ -42,7 +42,16 @@ var Panel = observer(React.createClass({
         position: "absolute",
         left: 2,
         top: -6
-      }
+      },
+      window: {
+        position: "relative",
+        overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
+        flexGrow: 1,
+        borderRadius: 4,
+        border: "1px solid rgb(56,56,56)",
+      },
     };
 
 
@@ -63,9 +72,9 @@ var Panel = observer(React.createClass({
       // »
       return (
         <div className="panel" style={style.panel}>
-          <div className="panelHeader" onClick={this.handleExpand} style={style.titlebar}><div style={style.panelToggle}>{"»"}</div></div>
+          <div className="panelHeader" onClick={this.handleExpand} style={style.titlebar}><Grip length={16} height={5} /></div>
 
-          <PanelGroup direction="column" panelWidths={panelWidths} spacing={2}>
+          <PanelGroup direction="column" panelWidths={panelWidths} spacing={3}>
             {windows}
           </PanelGroup>
 
@@ -88,12 +97,12 @@ var Panel = observer(React.createClass({
       // «
       return (
         <div className="panel" style={style.panel}>
-          <div className="panelHeader" onClick={this.handleExpand} style={style.titlebar}><div style={style.panelToggle}>{"«"}</div></div>
-
-          <PanelGroup direction="column" panelWidths={panelWidths} spacing={1}>
-            {windows}
-          </PanelGroup>
-
+          <div className="panelHeader" onClick={this.handleExpand} style={style.titlebar}><Grip length={16} height={5} /></div>
+          <div style={style.window}>
+            <PanelGroup direction="column" panelWidths={panelWidths} spacing={1}>
+              {windows}
+            </PanelGroup>
+          </div>
         </div>
       )
 
@@ -116,38 +125,11 @@ var IconGroup = React.createClass({
         color: "rgb(180,180,180)",
         fontSize: "8pt",
       },
-      handle: {
-        height: 4,
-        fontSize: "6pt",
-        textAlign: "center",
-        padding: 3,
-        color: "rgba(0,0,0,0.25)",
-      },
-      grip: {
-        width: 1,
-        height: 4,
-        marginRight: 1,
-        backgroundColor: "rgba(0,0,0,0.2)",
-        display: "inline-block",
-        position: "relative",
-        verticalAlign: "text-top"
-      }
     }
 
     return (
       <div style={style.container}>
-        <div style={style.handle}>
-          <div style={style.grip}></div>
-          <div style={style.grip}></div>
-          <div style={style.grip}></div>
-          <div style={style.grip}></div>
-          <div style={style.grip}></div>
-          <div style={style.grip}></div>
-          <div style={style.grip}></div>
-          <div style={style.grip}></div>
-          <div style={style.grip}></div>
-          <div style={style.grip}></div>
-        </div>
+        <Grip length={10}/>
         {
           this.props.window.widgets.map(function(widget, i) {
             var thiswidget = widgets[widget]
@@ -164,6 +146,38 @@ var IconGroup = React.createClass({
     )
   }
 });
+
+var Grip =React.createClass({
+  render: function() {
+    var style = {
+      handle: {
+        height: 4,
+        fontSize: "6pt",
+        textAlign: "center",
+        padding: 3,
+        color: "rgba(0,0,0,0.25)",
+      },
+      grip: {
+        width: this.props.bold? 2 : 1,
+        height: this.props.height? this.props.height : 4,
+        marginRight: 1,
+        backgroundColor: "rgba(0,0,0,0.2)",
+        display: "inline-block",
+        position: "relative",
+        verticalAlign: "text-top"
+      }
+    }
+    var grippies = [];
+    for (var i=0; i<this.props.length; i++) {
+      grippies.push(<div style={style.grip}></div>);
+    }
+    return (
+      <div style={style.handle}>
+        {grippies}
+      </div>
+    )
+  }
+})
 
 var WidgetButton = React.createClass({
   getInitialState: function() {

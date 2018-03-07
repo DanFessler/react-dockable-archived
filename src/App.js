@@ -82,7 +82,7 @@ var App = observer(React.createClass({
       <div style={style.root}>
         <div style={style.header}></div>
 
-        <PanelGroup direction="row" panelWidths={panelWidths} spacing={2} onUpdate={this.updatePanelState}>
+        <PanelGroup direction="row" panelWidths={panelWidths} spacing={3} onUpdate={this.updatePanelState}>
           {panels}
         </PanelGroup>
 
