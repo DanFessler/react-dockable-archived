@@ -49,64 +49,51 @@ var Panel = observer(React.createClass({
         display: "flex",
         flexDirection: "column",
         flexGrow: 1,
-        borderRadius: 4,
-        border: "1px solid rgb(56,56,56)",
+        borderRadius: 3,
+        // border: "1px solid rgba(0,0,0,0.1)",
+        // border: "1px solid rgba(255,255,255,0.125)",
       },
     };
 
+    let windows;
+    let panelWidths;
 
     if (this.props.expanded === true) {
-
-      let windows = this.props.windows.map(function(window, i) {
+      windows = this.props.windows.map(function(window, i) {
         return <Window key={i} window={window}/>
       }, this)
 
-      let panelWidths = this.props.windows.map(function(panel) {
+      panelWidths = this.props.windows.map(function(panel) {
         return {
           size: panel.size? panel.size : null,
           resize: panel.resize? panel.resize : null,
           minSize: panel.minSize? panel.minSize : null,
         }
       }, this)
-
-      // »
-      return (
-        <div className="panel" style={style.panel}>
-          <div className="panelHeader" onClick={this.handleExpand} style={style.titlebar}><Grip length={16} height={5} /></div>
-
-          <PanelGroup direction="column" panelWidths={panelWidths} spacing={3}>
-            {windows}
-          </PanelGroup>
-
-        </div>
-      )
     }
     else {
+      windows = <div style={style.window}>
+        {this.props.windows.map(function(window, i) {
+          return <IconGroup key={i} window={window} isLast={i==this.props.windows.length-1}/>
+        }, this)}
+      </div>
 
-      let windows = this.props.windows.map(function(window, i) {
-        return <IconGroup key={i} window={window}/>
-      }, this)
-
-      let panelWidths = this.props.windows.map(function(panel) {
+      panelWidths = this.props.windows.map(function(panel) {
         return {
           size: ((windows.length-1) * 29) + 10,
           resize: "fixed",
         }
       }, this)
-
-      // «
-      return (
-        <div className="panel" style={style.panel}>
-          <div className="panelHeader" onClick={this.handleExpand} style={style.titlebar}><Grip length={16} height={5} /></div>
-          <div style={style.window}>
-            <PanelGroup direction="column" panelWidths={panelWidths} spacing={1}>
-              {windows}
-            </PanelGroup>
-          </div>
-        </div>
-      )
-
     }
+
+    return (
+      <div className="panel" style={style.panel}>
+        {/* <div className="panelHeader" onClick={this.handleExpand} style={style.titlebar}><Grip length={16} height={5} /></div> */}
+        <PanelGroup direction="column" panelWidths={panelWidths} spacing={3}>
+          {windows}
+        </PanelGroup>
+      </div>
+    )
   }
 
 }));
@@ -120,10 +107,12 @@ var IconGroup = React.createClass({
         overflow: "hidden",
         display: "flex",
         flexDirection: "column",
-        flexGrow: 1,
+        flexGrow: this.props.isLast? 1 : 0,
         backgroundColor: "rgb(83,83,83)",
         color: "rgb(180,180,180)",
         fontSize: "8pt",
+        border: "1px solid rgba(255,255,255,0.025)",
+        borderBottom: "1px solid rgb(65,65,65)"
       },
     }
 
@@ -169,7 +158,7 @@ var Grip =React.createClass({
     }
     var grippies = [];
     for (var i=0; i<this.props.length; i++) {
-      grippies.push(<div style={style.grip}></div>);
+      grippies.push(<div style={style.grip} key={i}></div>);
     }
     return (
       <div style={style.handle}>

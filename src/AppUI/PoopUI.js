@@ -39,7 +39,7 @@ export default {
       var style = {
         container: {
           position: "relative",
-          padding: 8,
+          padding: 1,
           minWidth: 128,
           minHeight: 128,
           flexGrow: 1,
@@ -53,15 +53,17 @@ export default {
           flexGrow:1,
           position:"relative",
           overflow:"hidden",
-          backgroundColor: "rgba(0,0,0,0.125)",
-          border: "1px solid rgba(0,0,0,0.125)",
+          backgroundColor: "rgb(40,40,40)",
+          // border: "1px solid rgba(0,0,0,0.125)",
         }
       }
       return (
         <div style={style.container}>
-          <div>This is Poop's Content.</div>
-          <br/>
-          <input style={style.slider} onChange={this.handleSliderChange} type="range" value={State.sliderval}/>
+          <div style={{padding:8}}>
+            <div>This is Poop's Content.</div>
+            <br/>
+            <input style={style.slider} onChange={this.handleSliderChange} type="range" value={State.sliderval}/>
+          </div>
           <div style={style.dragContainer}>
             <Draggable updatePos={this.updatePos} initialPos={this.testDragPos}><div>this is a test div</div></Draggable>
           </div>
