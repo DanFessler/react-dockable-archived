@@ -2,6 +2,7 @@ import React from 'react';
 import reactMerge from "react-merge-styles";
 import widgets from "../widgets.js";
 import {observer} from "mobx-react";
+import burger from "../icons/hamburger.svg";
 
 var Window = observer(React.createClass({
   getInitialState: function() {
@@ -48,14 +49,18 @@ var Window = observer(React.createClass({
         // borderBottom: "1px solid rgb(56,56,56)",
         // backgroundColor: "rgb(66,66,66)",
         color: "grey",
-        width: 20,
-        height: "calc(100% + 0px)",
+        width: 12,
+        margin: "0 6px",
+        height: "100%",
         textAlign: "center",
-        padding: "2px 4px",
-        transform: "scaleX(1.2)",
         fontSize: "10px",
         flexShrink: 0,
         flexGrow: 0,
+        backgroundImage: "url("+burger+")",
+        backgroundSize: "contain",
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center",
+        opacity: 0.5
       },
     }
 
@@ -74,7 +79,7 @@ var Window = observer(React.createClass({
             }, this)
           }
           <div style={{flexGrow:1}}></div>
-          <div style={style.closebox}>☰</div>
+          <div style={style.closebox}></div>
         </div>
 
         <div className="content" style={style.content}>
@@ -129,6 +134,7 @@ var WindowTab = React.createClass({
           color: "grey",
           backgroundColor: this.state.hovering ? "rgba(83,83,83,0.5)" : "transparent",
           cursor: this.state.hovering ? "pointer" : "auto",
+          border: "1px solid transparent",
         }
       },
       closebox: {
