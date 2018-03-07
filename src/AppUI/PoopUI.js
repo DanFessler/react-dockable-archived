@@ -5,12 +5,17 @@ import {observer} from "mobx-react";
 // import State from "../State.js";
 import $ from "jquery";
 
+import icon from "../icons/writing.svg";
+
 var State = observable({
   sliderval: 50,
 })
 
 export default {
+
   title: "Poop2",
+  icon: icon,
+
   Widget: observer(React.createClass({
     componentWillMount() {
       extendObservable(this, {

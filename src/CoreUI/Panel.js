@@ -1,7 +1,11 @@
 import React from 'react';
 import PanelGroup from "../CoreUI/PanelGroup.js";
 import Window from "./Window.js";
+import widgets from "../widgets.js";
 import {observer} from "mobx-react";
+import reactMerge from 'react-merge-styles';
+
+import State from "../State.js";
 
 var Panel = observer(React.createClass({
 
@@ -9,6 +13,10 @@ var Panel = observer(React.createClass({
     return {
       shouldUpdate: false,
     }
+  },
+
+  handleExpand: function() {
+    State.panels[this.props.index].expanded = !State.panels[this.props.index].expanded;
   },
 
   render: function() {
@@ -22,8 +30,9 @@ var Panel = observer(React.createClass({
       },
       titlebar: {
         height: 12,
-        border: "1px solid rgba(0,0,0,0.125)",
-        borderBottom: "none",
+        borderBottom: "1px solid rgba(0,0,0,0.075)",
+        // marginTop: 1,
+        // borderBottom: "none",
         backgroundColor: "rgb(66,66,66)",
         position: "relative",
       },
@@ -36,30 +45,199 @@ var Panel = observer(React.createClass({
       }
     };
 
-    var panelWidths = this.props.windows.map(function(panel) {
-      return {
-        size: panel.size? panel.size : null,
-        resize: panel.resize? panel.resize : null,
-        minSize: panel.minSize? panel.minSize : null,
-      }
-    }, this)
 
-    var windows = this.props.windows.map(function(window, i) {
-      return <Window key={i} window={window}/>
-    }, this)
+    if (this.props.expanded === true) {
 
-    return (
-      <div className="panel" style={style.panel}>
-        <div className="panelHeader" style={style.titlebar}><div style={style.panelToggle}>{"»"}</div></div>
+      let windows = this.props.windows.map(function(window, i) {
+        return <Window key={i} window={window}/>
+      }, this)
 
-        <PanelGroup direction="column" panelWidths={panelWidths}>
-          {windows}
-        </PanelGroup>
+      let panelWidths = this.props.windows.map(function(panel) {
+        return {
+          size: panel.size? panel.size : null,
+          resize: panel.resize? panel.resize : null,
+          minSize: panel.minSize? panel.minSize : null,
+        }
+      }, this)
 
-      </div>
-    )
+      // »
+      return (
+        <div className="panel" style={style.panel}>
+          <div className="panelHeader" onClick={this.handleExpand} style={style.titlebar}><div style={style.panelToggle}>{"»"}</div></div>
+
+          <PanelGroup direction="column" panelWidths={panelWidths} spacing={2}>
+            {windows}
+          </PanelGroup>
+
+        </div>
+      )
+    }
+    else {
+
+      let windows = this.props.windows.map(function(window, i) {
+        return <IconGroup key={i} window={window}/>
+      }, this)
+
+      let panelWidths = this.props.windows.map(function(panel) {
+        return {
+          size: ((windows.length-1) * 29) + 10,
+          resize: "fixed",
+        }
+      }, this)
+
+      // «
+      return (
+        <div className="panel" style={style.panel}>
+          <div className="panelHeader" onClick={this.handleExpand} style={style.titlebar}><div style={style.panelToggle}>{"«"}</div></div>
+
+          <PanelGroup direction="column" panelWidths={panelWidths} spacing={1}>
+            {windows}
+          </PanelGroup>
+
+        </div>
+      )
+
+    }
   }
 
 }));
+
+var IconGroup = React.createClass({
+  render: function() {
+
+    var style = {
+      container: {
+        position: "relative",
+        overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
+        flexGrow: 1,
+        backgroundColor: "rgb(83,83,83)",
+        color: "rgb(180,180,180)",
+        fontSize: "8pt",
+      },
+      handle: {
+        height: 4,
+        fontSize: "6pt",
+        textAlign: "center",
+        padding: 3,
+        color: "rgba(0,0,0,0.25)",
+      },
+      grip: {
+        width: 1,
+        height: 4,
+        marginRight: 1,
+        backgroundColor: "rgba(0,0,0,0.2)",
+        display: "inline-block",
+        position: "relative",
+        verticalAlign: "text-top"
+      }
+    }
+
+    return (
+      <div style={style.container}>
+        <div style={style.handle}>
+          <div style={style.grip}></div>
+          <div style={style.grip}></div>
+          <div style={style.grip}></div>
+          <div style={style.grip}></div>
+          <div style={style.grip}></div>
+          <div style={style.grip}></div>
+          <div style={style.grip}></div>
+          <div style={style.grip}></div>
+          <div style={style.grip}></div>
+          <div style={style.grip}></div>
+        </div>
+        {
+          this.props.window.widgets.map(function(widget, i) {
+            var thiswidget = widgets[widget]
+            // thiswidget.title
+            return (
+              // <div key={i} style={Object.assign({}, style.button, {backgroundImage: "url("+thiswidget.icon+")"})}>
+              //   {/* {thiswidget.title} */}
+              // </div>
+                <WidgetButton key={i} icon={thiswidget.icon} label={thiswidget.title} />
+            )
+          }, this)
+        }
+      </div>
+    )
+  }
+});
+
+var WidgetButton = React.createClass({
+  getInitialState: function() {
+    return {
+      hover: false,
+    }
+  },
+  handleMouseOver: function() {
+    this.setState({hover: true})
+  },
+  handleMouseLeave: function() {
+    this.setState({hover: false})
+  },
+  render: function() {
+    var style = reactMerge({
+      container: {
+        boxSizing: "border-box",
+        display: "flex",
+        padding: 3,
+        margin: 3,
+        marginTop: 0,
+        height: 26,
+        minHeight: 26,
+        borderRadius: 3,
+        selected: {
+          cursor: "pointer",
+          backgroundColor: "rgba(0,0,0,0.125)",
+          // border: "1px solid rgba(0,0,0,0.125)",
+        }
+      },
+      containerPadding: {
+        display: "flex",
+        overflow: "hidden",
+      },
+      button: {
+        boxSizing: "border-box",
+        marginRight: 3,
+        width: 26,
+        minWidth: 26,
+        display: "flex",
+        overflow: "hidden",
+        flexGrow: 0,
+      },
+      icon: {
+        filter: "invert(100%)",
+        backgroundSize: "auto 80%",
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center center",
+        // opacity: 0.75,
+        backgroundImage: "url("+this.props.icon+")",
+        flexGrow: 1,
+        flexShrink: 0
+      },
+      label: {
+        flexShrink: 1,
+        lineHeight: "18px",
+        fontWeight: "bold",
+        color: "white",
+        fontSize: "9px",
+      }
+    });
+    return (
+      <div onMouseOver={this.handleMouseOver} onMouseLeave={this.handleMouseLeave} style={this.state.hover? style.container.selected : style.container}>
+        <div style={style.containerPadding}>
+          <div style={style.button}>
+            <div style={style.icon}></div>
+          </div>
+          <div style={style.label}>{this.props.label}</div>
+        </div>
+      </div>
+    )
+  }
+});
+
+
 
 export default Panel;

@@ -14,6 +14,18 @@ var App = observer(React.createClass({
     return State.resizePanel(i, delta.x);
   },
 
+  updatePanelState: function(panels) {
+    //State.panels = panels;
+    // console.log(panels);
+    for (var i=0; i<panels.length; i++) {
+      // if (panels[i].size < 150) State.panels[i].expanded = false;
+      // if (panels[i].size > 150) State.panels[i].expanded = true;
+      State.panels[i].size = panels[i].size;
+      State.panels[i].minSize = panels[i].minSize;
+      State.panels[i].resize = panels[i].resize;
+    }
+  },
+
   render: function() {
     var style = {
       root: {
@@ -33,6 +45,7 @@ var App = observer(React.createClass({
         height: 32,
         minHeight: 32,
         backgroundColor: "rgb(83,83,83)",
+        marginBottom: 1,
       },
       styleTest: {
         width: "100%",
@@ -42,40 +55,38 @@ var App = observer(React.createClass({
       }
     }
 
-    var panelWidths = State.panels.map(function(panel) {
-      return {
+    var panels = [];
+    var panelWidths = [];
+
+    for (var i=0; i<State.panels.length; i++) {
+
+      let panel = State.panels[i];
+
+      // if (panel.expanded === true && panel.size < 150) panel.expanded = false;
+      // if (panel.expanded === false && panel.size > 150) panel.expanded = true;
+
+      panelWidths.push({
         size: panel.size? panel.size : null,
         resize: panel.resize? panel.resize : null,
         minSize: panel.minSize? panel.minSize : null,
-      }
-    }, this)
-
-    var panels = State.panels.map(function(panel, i, arr) {
-      return <Panel index={i} key={panel.key? panel.key : i} windows={panel.windows} />
-    }, this)
+        snap: panel.snap && panel.snap.length > 0? panel.snap : [],
+        // size: 36,
+        // resize: "fixed",
+      })
+      panels.push(
+        <Panel index={i} key={panel.key? panel.key : i} windows={panel.windows} expanded={panel.expanded}/>
+      )
+    }
 
     return (
       <div style={style.root}>
         <div style={style.header}></div>
 
-        <PanelGroup direction="row" panelWidths={panelWidths}>
+        <PanelGroup direction="row" panelWidths={panelWidths} spacing={2} onUpdate={this.updatePanelState}>
           {panels}
         </PanelGroup>
 
       </div>
-      // <PanelGroup direction="row" spacing={2} panelWidths={[{size: 100},null,{minSize:144}]} panelColor="white" borderColor="grey">
-      //   <div>div 1</div>
-      //   <div>div 2</div>
-      //   <PanelGroup direction="column" spacing={2} panelColor="white" borderColor="grey">
-      //     <PanelGroup direction="row" spacing={2} panelWidths={[{size: 100},{size: 100},{size: 100}]} panelColor="white" borderColor="grey">
-      //       <div>div 3</div>
-      //       <div>div 4</div>
-      //       <div>div 5</div>
-      //     </PanelGroup>
-      //     <div>div 4</div>
-      //     <div>div 5</div>
-      //   </PanelGroup>
-      // </PanelGroup>
     );
   }
 }));
