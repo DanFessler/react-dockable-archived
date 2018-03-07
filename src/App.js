@@ -33,8 +33,6 @@ var App = observer(React.createClass({
         height: 32,
         minHeight: 32,
         backgroundColor: "rgb(83,83,83)",
-        borderBottom: "1px solid rgba(0,0,0,0.25)",
-        marginBottom: 2,
       },
       styleTest: {
         width: "100%",

@@ -7,7 +7,7 @@ var PanelGroup = React.createClass({
   // Default props
   getDefaultProps: function() {
     return {
-      spacing: 2,
+      spacing: 1,
       direction: "row",
       panelWidths: []
     };

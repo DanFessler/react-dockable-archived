@@ -10,7 +10,6 @@
     "jquery": "^3.1.0",
     "mobx": "^2.4.3",
     "mobx-react": "^3.5.3",
-    "npm": "^5.7.1",
     "react": "^15.2.1",
     "react-dom": "^15.2.1",
     "react-merge-styles": "0.0.3"
