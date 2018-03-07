@@ -2,7 +2,8 @@ import {observable} from "mobx";
 
 const widgets = {
   CheeseUI: "CheeseUI",
-  PoopUI: "PoopUI"
+  PoopUI: "PoopUI",
+  FloatUI: "FloatUI"
 }
 
 var State = observable({
@@ -10,6 +11,7 @@ var State = observable({
     {
       size: 256,
       resize: "dynamic",
+      expanded: true,
       windows: [
         {
           size: 228,
@@ -28,13 +30,16 @@ var State = observable({
       ]
     },
     {
-      size: 150,
-      minSize: 150,
-      resize: "dynamic",
+      size: 40,
+      // minSize: 150,
+      resize: "fixed",
+      snap: [150],
+      expanded: false,
       windows: [
         {
           size: 128,
           minSize: 200,
+
           widgets: [
             widgets.CheeseUI,
             widgets.PoopUI,
@@ -45,6 +50,13 @@ var State = observable({
           widgets: [
             widgets.CheeseUI,
             widgets.PoopUI,
+          ]
+        },
+        {
+          size: 128,
+          float: true,
+          widgets: [
+            widgets.FloatUI
           ]
         },
       ]
@@ -52,6 +64,7 @@ var State = observable({
     {
       size: 256,
       resize: "stretch",
+      expanded: true,
       windows: [
         {
           size: 128,
@@ -65,6 +78,7 @@ var State = observable({
     {
       size: 256,
       resize: "dynamic",
+      expanded: true,
       windows: [
         {
           size: 128,
@@ -92,6 +106,7 @@ var State = observable({
     {
       size: 256,
       resize: "dynamic",
+      expanded: true,
       windows: [
         {
           size: 128,

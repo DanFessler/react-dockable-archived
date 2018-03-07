@@ -3,8 +3,13 @@ import {extendObservable} from "mobx";
 import {observer} from "mobx-react";
 import State from "../State.js";
 
+import icon from "../icons/paint-bucket.svg";
+
 export default {
+
   title: "Cheese",
+  icon: icon,
+
   Widget: observer(React.createClass({
 
     componentWillMount() {
