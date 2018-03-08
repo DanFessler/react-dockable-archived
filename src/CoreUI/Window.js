@@ -36,6 +36,7 @@ var Window = observer(React.createClass({
         border: "1px solid rgba(255,255,255,0.025)",
       },
       titlebar: {
+        flexShrink: 0,
         position: "relative",
         height: 24,
         minHeight: 22,
