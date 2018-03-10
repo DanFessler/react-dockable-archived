@@ -31,7 +31,9 @@ var App = observer(React.createClass({
       root: {
         height: "100%",
         display: "flex",
-        flexDirection: "column"
+        flexDirection: "column",
+        padding: 1,
+        boxSizing: "border-box",
       },
       container: {
         // height: "100%",
@@ -80,9 +82,9 @@ var App = observer(React.createClass({
 
     return (
       <div style={style.root}>
-        <div style={style.header}></div>
+        {/* <div style={style.header}></div> */}
 
-        <PanelGroup direction="row" panelWidths={panelWidths} spacing={3} onUpdate={this.updatePanelState}>
+        <PanelGroup direction="row" panelWidths={panelWidths} spacing={1} onUpdate={this.updatePanelState}>
           {panels}
         </PanelGroup>
 
