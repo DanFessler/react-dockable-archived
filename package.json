@@ -7,7 +7,6 @@
     "webpack-requiredir": "^0.2.1"
   },
   "dependencies": {
-    "jquery": "^3.1.0",
     "mobx": "^2.4.3",
     "mobx-react": "^3.5.3",
     "react": "^15.2.1",
