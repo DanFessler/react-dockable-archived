@@ -23,9 +23,7 @@ var Window = observer(React.createClass({
         flexDirection: "column",
         flexGrow: 1,
         borderRadius: 3,
-        // border: "1px solid rgb(56,56,56)",
-        // border: "1px solid rgba(0,0,0,0.1)",
-        // border: "1px solid rgba(255,255,255,0.125)",
+        border: "1px solid rgba(0,0,0,0.1)",
       },
       content: {
         backgroundColor: "rgb(83,83,83)",
@@ -33,6 +31,7 @@ var Window = observer(React.createClass({
         fontSize: "8pt",
         flexGrow: 1,
         display: "flex",
+        flexDirection: "column",
         border: "1px solid rgba(255,255,255,0.025)",
       },
       titlebar: {
@@ -67,28 +66,47 @@ var Window = observer(React.createClass({
 
     var WidgetUI = widgets[this.props.window.widgets[this.state.selected]].Widget;
 
-    return (
-      <div className="window" style={style.window}>
+    if (this.props.expanded) {
+      return (
+        <div className="window" style={style.window}>
 
-        <div className="titlebar" style={style.titlebar}>
-          {
-            this.props.window.widgets.map(function(widget, i) {
-              var thiswidget = widgets[widget]
-              return (
-                <WindowTab onClick={this.handleTabSelect} key={i} index={i} selected={i === this.state.selected ? true : false} title={ thiswidget.title } />
-              );
-            }, this)
-          }
-          <div style={{flexGrow:1}}></div>
-          <div style={style.closebox}></div>
+          <div className="titlebar" style={style.titlebar}>
+            {
+              this.props.window.widgets.map(function(widget, i) {
+                var thiswidget = widgets[widget]
+                return (
+                  <WindowTab onClick={this.handleTabSelect} key={i} index={i} selected={i === this.state.selected ? true : false} title={ thiswidget.title } />
+                );
+              }, this)
+            }
+            <div style={{flexGrow:1}}></div>
+            <div style={style.closebox}></div>
+          </div>
+
+          <div className="content" style={style.content}>
+            <WidgetUI />
+          </div>
+
         </div>
-
-        <div className="content" style={style.content}>
-          <WidgetUI />
+      );
+    }
+    else {
+      return (
+        <div className="window" style={style.window}>
+          <div className="content" style={style.content}>
+            <Grip length={10}/>
+            {
+              this.props.window.widgets.map(function(widget, i) {
+                var thiswidget = widgets[widget]
+                return (
+                  <WidgetButton key={i} icon={thiswidget.icon} label={thiswidget.title} />
+                );
+              }, this)
+            }
+          </div>
         </div>
-
-      </div>
-    );
+      )
+    }
   }
 }))
 
@@ -178,5 +196,110 @@ var WindowTab = React.createClass({
     );
   }
 })
+
+var Grip =React.createClass({
+  render: function() {
+    var style = {
+      handle: {
+        height: 4,
+        fontSize: "6pt",
+        textAlign: "center",
+        padding: 3,
+        color: "rgba(0,0,0,0.25)",
+      },
+      grip: {
+        width: this.props.bold? 2 : 1,
+        height: this.props.height? this.props.height : 4,
+        marginRight: 1,
+        backgroundColor: "rgba(0,0,0,0.2)",
+        display: "inline-block",
+        position: "relative",
+        verticalAlign: "text-top"
+      }
+    }
+    var grippies = [];
+    for (var i=0; i<this.props.length; i++) {
+      grippies.push(<div style={style.grip} key={i}></div>);
+    }
+    return (
+      <div style={style.handle}>
+        {grippies}
+      </div>
+    )
+  }
+})
+
+var WidgetButton = React.createClass({
+  getInitialState: function() {
+    return {
+      hover: false,
+    }
+  },
+  handleMouseOver: function() {
+    this.setState({hover: true})
+  },
+  handleMouseLeave: function() {
+    this.setState({hover: false})
+  },
+  render: function() {
+    var style = reactMerge({
+      container: {
+        boxSizing: "border-box",
+        display: "flex",
+        padding: 3,
+        margin: 3,
+        marginTop: 0,
+        height: 26,
+        minHeight: 26,
+        borderRadius: 3,
+        selected: {
+          cursor: "pointer",
+          backgroundColor: "rgba(0,0,0,0.125)",
+          // border: "1px solid rgba(0,0,0,0.125)",
+        }
+      },
+      containerPadding: {
+        display: "flex",
+        overflow: "hidden",
+      },
+      button: {
+        boxSizing: "border-box",
+        marginRight: 3,
+        width: 24,
+        minWidth: 24,
+        display: "flex",
+        overflow: "hidden",
+        flexGrow: 0,
+      },
+      icon: {
+        filter: "invert(100%)",
+        backgroundSize: "auto 80%",
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center center",
+        // opacity: 0.75,
+        backgroundImage: "url("+this.props.icon+")",
+        flexGrow: 1,
+        flexShrink: 0
+      },
+      label: {
+        flexShrink: 1,
+        lineHeight: "18px",
+        fontWeight: "bold",
+        color: "white",
+        fontSize: "9px",
+      }
+    });
+    return (
+      <div onMouseOver={this.handleMouseOver} onMouseLeave={this.handleMouseLeave} style={this.state.hover? style.container.selected : style.container}>
+        <div style={style.containerPadding}>
+          <div style={style.button}>
+            <div style={style.icon}></div>
+          </div>
+          <div style={style.label}>{this.props.label}</div>
+        </div>
+      </div>
+    )
+  }
+});
 
 export default Window;
