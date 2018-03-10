@@ -7,7 +7,7 @@ import icon from "../icons/paint-bucket.svg";
 
 export default {
 
-  title: "Cheese",
+  title: "Test Panel",
   icon: icon,
 
   Widget: observer(React.createClass({
@@ -36,8 +36,8 @@ export default {
       }
       return (
         <div style={style}>
-          <div onClick={this.handleClick}>testvariable: {this.testvariable}</div>
-          <input type="button" value="Make me wide!" onClick={this.handleWideClick}/>
+          {/* <div onClick={this.handleClick}>testvariable: {this.testvariable}</div> */}
+          <input type="button" value="Test Button!" onClick={this.handleWideClick}/>
         </div>
       )
     }

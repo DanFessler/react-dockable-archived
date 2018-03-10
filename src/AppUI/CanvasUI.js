@@ -13,7 +13,7 @@ var State = observable({
 
 export default {
 
-  title: "Poop2",
+  title: "Canvas",
   icon: icon,
 
   Widget: observer(React.createClass({
@@ -60,8 +60,7 @@ export default {
       return (
         <div style={style.container}>
           <div style={{padding:8}}>
-            <div>This is Poop's Content.</div>
-            <br/>
+            
             <input style={style.slider} onChange={this.handleSliderChange} type="range" value={State.sliderval}/>
           </div>
           <div style={style.dragContainer}>

@@ -1,8 +1,8 @@
 import {observable} from "mobx";
 
 const widgets = {
-  CheeseUI: "CheeseUI",
-  PoopUI: "PoopUI",
+  TestPanelUI: "TestPanelUI",
+  CanvasUI: "CanvasUI",
   FloatUI: "FloatUI"
 }
 
@@ -16,15 +16,15 @@ var State = observable({
         {
           size: 228,
           widgets: [
-            widgets.CheeseUI,
-            widgets.PoopUI,
+            widgets.TestPanelUI,
+            widgets.CanvasUI,
           ]
         },
         {
           size: 128,
           widgets: [
-            widgets.CheeseUI,
-            widgets.PoopUI,
+            widgets.TestPanelUI,
+            widgets.CanvasUI,
           ]
         },
       ]
@@ -41,15 +41,15 @@ var State = observable({
           minSize: 200,
 
           widgets: [
-            widgets.CheeseUI,
-            widgets.PoopUI,
+            widgets.TestPanelUI,
+            widgets.CanvasUI,
           ]
         },
         {
           size: 128,
           widgets: [
-            widgets.CheeseUI,
-            widgets.PoopUI,
+            widgets.TestPanelUI,
+            widgets.CanvasUI,
           ]
         },
         {
@@ -69,8 +69,8 @@ var State = observable({
         {
           size: 128,
           widgets: [
-            widgets.CheeseUI,
-            widgets.PoopUI,
+            widgets.TestPanelUI,
+            widgets.CanvasUI,
           ]
         },
       ]
@@ -83,22 +83,22 @@ var State = observable({
         {
           size: 128,
           widgets: [
-            widgets.CheeseUI,
-            widgets.PoopUI,
+            widgets.TestPanelUI,
+            widgets.CanvasUI,
           ]
         },
         {
           size: 128,
           widgets: [
-            widgets.CheeseUI,
-            widgets.PoopUI,
+            widgets.TestPanelUI,
+            widgets.CanvasUI,
           ]
         },
         {
           size: 128,
           widgets: [
-            widgets.CheeseUI,
-            widgets.PoopUI,
+            widgets.TestPanelUI,
+            widgets.CanvasUI,
           ]
         },
       ]
@@ -111,22 +111,22 @@ var State = observable({
         {
           size: 128,
           widgets: [
-            widgets.CheeseUI,
-            widgets.PoopUI,
+            widgets.TestPanelUI,
+            widgets.CanvasUI,
           ]
         },
         {
           size: 128,
           widgets: [
-            widgets.CheeseUI,
-            widgets.PoopUI,
+            widgets.TestPanelUI,
+            widgets.CanvasUI,
           ]
         },
         {
           size: 128,
           widgets: [
-            widgets.CheeseUI,
-            widgets.PoopUI,
+            widgets.TestPanelUI,
+            widgets.CanvasUI,
           ]
         },
       ]
