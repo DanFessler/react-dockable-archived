@@ -1,5 +1,6 @@
 {
   "name": "dockable",
+  "homepage": "https://danfessler.github.io/react-dockable/",
   "version": "0.0.1",
   "private": true,
   "devDependencies": {
@@ -7,6 +8,7 @@
     "webpack-requiredir": "^0.2.1"
   },
   "dependencies": {
+    "gh-pages": "^1.1.0",
     "mobx": "^2.4.3",
     "mobx-react": "^3.5.3",
     "react": "^15.2.1",
@@ -14,6 +16,8 @@
     "react-merge-styles": "0.0.3"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "eject": "react-scripts eject"
