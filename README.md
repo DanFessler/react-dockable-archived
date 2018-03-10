@@ -1,6 +1,6 @@
-This project is a work in progress
+*This project is a work in progress*
 
-React-Dockable is a GUI framework for building flexible and scalable tools.  Largely inspired by Photoshop's GUI, every widget is contained in dockable palette windows which can be re-configured however suits your workflow, allowing you to focus on the functional components of your tool without worrying about how or where to present it in the interface.
+**React-Dockable** is a GUI framework for building flexible and scalable tools.  Largely inspired by Photoshop's GUI, every widget is contained in dockable palette windows which can be re-configured however suits your workflow, allowing you to focus on the functional components of your tool without worrying about how or where to present it in the interface.
 
 ## Available Scripts
 
