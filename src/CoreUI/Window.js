@@ -140,7 +140,7 @@ var WindowTab = React.createClass({
         fontFamily: "verdana",
         fontWeight: "bold",
         borderRadius: "3px 3px 0 0",
-        // marginRight: 1,
+        marginRight: 1,
         // userSelect: "none",
 
         selected: {
